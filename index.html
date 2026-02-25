@@ -672,7 +672,7 @@
           streak: calculateStreak(data),
           currentDay: getCurrentDay()
         };
-        await fetch('/api/sync', {
+        await fetch('https://seven5hard-sync.onrender.com/sync', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ user: USER, stats })
@@ -682,7 +682,7 @@
     
     async function fetchPartner() {
       try {
-        const res = await fetch(`/api/partner?partner=${PARTNER}`);
+        const res = await fetch(`https://seven5hard-sync.onrender.com/partner?partner=${PARTNER}`);
         const stats = await res.json();
         if (stats) {
           document.getElementById('partnerStats').textContent = `Day ${stats.currentDay} • ${stats.daysComplete} days done`;
