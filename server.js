@@ -22,6 +22,20 @@ const server = http.createServer((req, res) => {
     }
   }
   
+  // Serve reset page
+  if (url.pathname === '/reset' || url.pathname === '/reset.html' || url.pathname === '/fix') {
+    fs.readFile(path.join(__dirname, 'reset.html'), (err, content) => {
+      if (err) {
+        res.writeHead(500);
+        res.end('Server error');
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.end(content);
+    });
+    return;
+  }
+  
   // Serve HTML
   fs.readFile(path.join(__dirname, 'index.html'), (err, content) => {
     if (err) {

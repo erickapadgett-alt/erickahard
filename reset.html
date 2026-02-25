@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fix 75 Hard Data</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; background: #1a1a2e; color: white; padding: 40px 20px; text-align: center; }
+    h1 { color: #9E1B32; }
+    button { background: #9E1B32; color: white; border: none; padding: 20px 40px; font-size: 1.2em; border-radius: 10px; margin: 10px; cursor: pointer; }
+    button:active { transform: scale(0.95); }
+    .success { background: #2ecc71; padding: 20px; border-radius: 10px; margin-top: 20px; }
+    pre { background: #0f3460; padding: 15px; border-radius: 8px; text-align: left; overflow-x: auto; font-size: 0.8em; }
+  </style>
+</head>
+<body>
+  <h1>🔧 Fix Your 75 Hard Data</h1>
+  <p>This will fix Day 1 completion and reset any bad data.</p>
+  
+  <button onclick="fixData()">Fix My Data</button>
+  <button onclick="showData()">Show Current Data</button>
+  <button onclick="nukeCaches()">Clear All Caches</button>
+  
+  <div id="result"></div>
+  
+  <script>
+    const STORAGE_KEY = 'ericka_75hard_v2';
+    const DAY1 = new Date('2026-02-24').toDateString(); // "Tue Feb 24 2026"
+    
+    function fixData() {
+      let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || {
+        completedDays: [], todayTasks: {}, waterBottles: {},
+        books: [], measurements: [], reflections: {}, theme: 'dark'
+      };
+      
+      // Remove any wrong Day 1 formats
+      const wrongFormats = ["Mon Feb 24 2026", "2026-02-24", "Feb 24 2026"];
+      data.completedDays = data.completedDays.filter(d => !wrongFormats.includes(d));
+      
+      // Ensure correct Day 1 is present
+      if (!data.completedDays.includes(DAY1)) {
+        data.completedDays.push(DAY1);
+      }
+      
+      // Save
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      
+      document.getElementById('result').innerHTML = `
+        <div class="success">
+          <h2>✅ Fixed!</h2>
+          <p>Day 1 (${DAY1}) is now marked complete.</p>
+          <p>Total days complete: ${data.completedDays.length}</p>
+          <p><strong>Now go back to the main app and refresh!</strong></p>
+          <p><a href="/?v=4" style="color: #FFD700;">← Back to App</a></p>
+        </div>
+      `;
+    }
+    
+    function showData() {
+      const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      document.getElementById('result').innerHTML = `
+        <pre>${JSON.stringify(data, null, 2)}</pre>
+      `;
+    }
+    
+    async function nukeCaches() {
+      if ('caches' in window) {
+        const names = await caches.keys();
+        await Promise.all(names.map(name => caches.delete(name)));
+      }
+      if ('serviceWorker' in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(registrations.map(r => r.unregister()));
+      }
+      document.getElementById('result').innerHTML = `
+        <div class="success">
+          <h2>🧹 Caches Cleared!</h2>
+          <p>All browser caches and service workers removed.</p>
+          <p><a href="/?v=4" style="color: #FFD700;">← Back to App (Fresh Load)</a></p>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
