@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>75 Hard - Day Counter</title>
+  <title>Ericka's 75 Hard</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -16,6 +16,17 @@
       padding-bottom: 100px;
     }
     .container { max-width: 500px; margin: 0 auto; }
+    .user-badge {
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 0.9em;
+      opacity: 0.7;
+    }
+    .user-badge span { 
+      background: rgba(233, 69, 96, 0.3);
+      padding: 5px 15px;
+      border-radius: 20px;
+    }
     
     /* Quote Banner */
     .quote-banner {
@@ -56,7 +67,7 @@
     }
     .progress-text { margin-top: 8px; font-size: 0.9em; opacity: 0.7; }
     
-    /* Checklist */
+    /* Sections */
     .section {
       background: rgba(255,255,255,0.08);
       border-radius: 16px;
@@ -94,6 +105,80 @@
       opacity: 0.5;
     }
     
+    /* Water Tracker */
+    .water-tracker {
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .water-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .water-count { 
+      font-size: 0.9em;
+      color: #4fc3f7;
+      font-weight: 600;
+    }
+    .water-bottles {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+    .bottle {
+      width: 50px;
+      height: 70px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2em;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    .bottle::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 0%;
+      background: linear-gradient(180deg, #4fc3f7, #0288d1);
+      transition: height 0.3s ease;
+      z-index: 0;
+      border-radius: 0 0 6px 6px;
+    }
+    .bottle.filled::before {
+      height: 100%;
+    }
+    .bottle span {
+      position: relative;
+      z-index: 1;
+    }
+    .bottle:hover {
+      transform: scale(1.05);
+      border-color: #4fc3f7;
+    }
+    .bottle.filled {
+      border-color: #4fc3f7;
+    }
+    .water-complete {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #4fc3f7;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .water-complete.show {
+      opacity: 1;
+    }
+    
     /* Weight Tracker */
     .weight-input-group {
       display: flex;
@@ -110,9 +195,7 @@
       font-size: 1.1em;
       outline: none;
     }
-    .weight-input-group input:focus {
-      border-color: #e94560;
-    }
+    .weight-input-group input:focus { border-color: #e94560; }
     .weight-input-group input::placeholder { color: rgba(255,255,255,0.4); }
     .weight-input-group button {
       padding: 12px 20px;
@@ -123,10 +206,7 @@
       font-weight: 600;
       cursor: pointer;
     }
-    .weight-history {
-      max-height: 150px;
-      overflow-y: auto;
-    }
+    .weight-history { max-height: 150px; overflow-y: auto; }
     .weight-entry {
       display: flex;
       justify-content: space-between;
@@ -137,7 +217,7 @@
     .weight-date { opacity: 0.6; }
     .weight-value { font-weight: 600; color: #ff6b6b; }
     
-    /* Streak & Stats */
+    /* Stats */
     .stats-row {
       display: flex;
       gap: 10px;
@@ -153,7 +233,7 @@
     .stat-value { font-size: 1.8em; font-weight: 700; color: #e94560; }
     .stat-label { font-size: 0.8em; opacity: 0.7; margin-top: 5px; }
     
-    /* Complete Day Button */
+    /* Complete Button */
     .complete-btn {
       width: 100%;
       padding: 18px;
@@ -168,20 +248,11 @@
       box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3);
       transition: transform 0.2s, box-shadow 0.2s;
     }
-    .complete-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 15px 40px rgba(233, 69, 96, 0.4);
-    }
-    .complete-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-    .complete-btn.completed {
-      background: linear-gradient(135deg, #2ecc71, #27ae60);
-    }
+    .complete-btn:hover { transform: translateY(-2px); }
+    .complete-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .complete-btn.completed { background: linear-gradient(135deg, #2ecc71, #27ae60); }
     
-    /* Calendar Grid */
+    /* Calendar */
     .calendar {
       display: grid;
       grid-template-columns: repeat(15, 1fr);
@@ -205,6 +276,8 @@
 </head>
 <body>
   <div class="container">
+    <div class="user-badge"><span>💪 Ericka's Journey</span></div>
+    
     <div class="quote-banner">
       <p class="quote-text" id="quote"></p>
       <p class="quote-author" id="author"></p>
@@ -237,6 +310,7 @@
     
     <div class="section">
       <div class="section-title"><span class="section-icon">✅</span> Today's Tasks</div>
+      
       <div class="task" data-task="diet">
         <input type="checkbox" id="diet">
         <label class="task-label" for="diet">Follow diet (no cheat meals, no alcohol)</label>
@@ -249,10 +323,23 @@
         <input type="checkbox" id="workout2">
         <label class="task-label" for="workout2">Workout #2 - Outdoor (45 min)</label>
       </div>
-      <div class="task" data-task="water">
-        <input type="checkbox" id="water">
-        <label class="task-label" for="water">Drink 1 gallon of water</label>
+      
+      <!-- Water Bottle Tracker -->
+      <div class="water-tracker">
+        <div class="water-label">
+          <span>💧 Water (1 gallon = 5 bottles)</span>
+          <span class="water-count" id="waterCount">0/5 bottles</span>
+        </div>
+        <div class="water-bottles" id="waterBottles">
+          <div class="bottle" data-bottle="1" onclick="toggleBottle(1)"><span>🍶</span></div>
+          <div class="bottle" data-bottle="2" onclick="toggleBottle(2)"><span>🍶</span></div>
+          <div class="bottle" data-bottle="3" onclick="toggleBottle(3)"><span>🍶</span></div>
+          <div class="bottle" data-bottle="4" onclick="toggleBottle(4)"><span>🍶</span></div>
+          <div class="bottle" data-bottle="5" onclick="toggleBottle(5)"><span>🍶</span></div>
+        </div>
+        <div class="water-complete" id="waterComplete">🎉 1 Gallon Complete!</div>
       </div>
+      
       <div class="task" data-task="reading">
         <input type="checkbox" id="reading">
         <label class="task-label" for="reading">Read 10 pages (non-fiction)</label>
@@ -261,8 +348,9 @@
         <input type="checkbox" id="photo">
         <label class="task-label" for="photo">Take progress photo</label>
       </div>
+      
       <button class="complete-btn" id="completeBtn" onclick="completeDay()">
-        Complete Day 2 ✓
+        Complete Day ✓
       </button>
     </div>
     
@@ -282,25 +370,24 @@
   </div>
 
   <script>
-    const START_DATE = new Date('2026-02-24'); // Day 1
+    const START_DATE = new Date('2026-02-24');
+    const STORAGE_KEY = 'ericka_75hard';
     const TASKS = ['diet', 'workout1', 'workout2', 'water', 'reading', 'photo'];
     
     const quotes = [
       { text: "The only bad workout is the one that didn't happen.", author: "Unknown" },
       { text: "Discipline is choosing between what you want now and what you want most.", author: "Abraham Lincoln" },
       { text: "The body achieves what the mind believes.", author: "Napoleon Hill" },
-      { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+      { text: "Success is not final, failure is not fatal.", author: "Winston Churchill" },
       { text: "Don't wish for it. Work for it.", author: "Unknown" },
       { text: "The pain you feel today will be the strength you feel tomorrow.", author: "Unknown" },
       { text: "Your body can stand almost anything. It's your mind that you have to convince.", author: "Unknown" },
       { text: "75 Hard isn't about being perfect. It's about not quitting.", author: "Andy Frisella" },
       { text: "Mental toughness is doing the right thing regardless of how you feel.", author: "Andy Frisella" },
-      { text: "Champions don't do extraordinary things. They do ordinary things extraordinarily well.", author: "Unknown" },
-      { text: "The difference between who you are and who you want to be is what you do.", author: "Unknown" },
       { text: "You don't have to be extreme, just consistent.", author: "Unknown" },
       { text: "Suffer the pain of discipline or suffer the pain of regret.", author: "Jim Rohn" },
-      { text: "Every day is a new opportunity to change your life.", author: "Unknown" },
-      { text: "Hard work beats talent when talent doesn't work hard.", author: "Tim Notke" }
+      { text: "Hard work beats talent when talent doesn't work hard.", author: "Tim Notke" },
+      { text: "You got this, Ericka! 💪", author: "Your App" }
     ];
     
     function getCurrentDay() {
@@ -314,20 +401,19 @@
     }
     
     function loadData() {
-      const DAY1 = "Mon Feb 24 2026"; // Day 1 completed!
-      const stored = localStorage.getItem('75hard_data');
-      let data = stored ? JSON.parse(stored) : { completedDays: [], weights: [], todayTasks: {} };
-      
-      // Ensure Day 1 is marked complete
+      const DAY1 = "Mon Feb 24 2026";
+      const stored = localStorage.getItem(STORAGE_KEY);
+      let data = stored ? JSON.parse(stored) : { completedDays: [], weights: [], todayTasks: {}, waterBottles: {} };
+      if (!data.waterBottles) data.waterBottles = {};
       if (!data.completedDays.includes(DAY1)) {
         data.completedDays.push(DAY1);
-        localStorage.setItem('75hard_data', JSON.stringify(data));
+        saveData(data);
       }
       return data;
     }
     
     function saveData(data) {
-      localStorage.setItem('75hard_data', JSON.stringify(data));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     }
     
     function displayQuote() {
@@ -336,42 +422,73 @@
       document.getElementById('author').textContent = `— ${quote.author}`;
     }
     
+    function toggleBottle(num) {
+      const data = loadData();
+      const todayKey = new Date().toDateString();
+      if (!data.waterBottles[todayKey]) data.waterBottles[todayKey] = 0;
+      
+      const currentCount = data.waterBottles[todayKey];
+      if (num <= currentCount) {
+        data.waterBottles[todayKey] = num - 1;
+      } else {
+        data.waterBottles[todayKey] = num;
+      }
+      
+      // Auto-check water task if 5 bottles done
+      if (!data.todayTasks[todayKey]) data.todayTasks[todayKey] = {};
+      data.todayTasks[todayKey].water = data.waterBottles[todayKey] >= 5;
+      
+      saveData(data);
+      updateUI();
+    }
+    
+    function updateWaterUI(data) {
+      const todayKey = new Date().toDateString();
+      const count = data.waterBottles[todayKey] || 0;
+      
+      document.getElementById('waterCount').textContent = `${count}/5 bottles`;
+      document.querySelectorAll('.bottle').forEach((bottle, i) => {
+        bottle.classList.toggle('filled', i < count);
+      });
+      document.getElementById('waterComplete').classList.toggle('show', count >= 5);
+    }
+    
     function updateUI() {
       const data = loadData();
       const currentDay = getCurrentDay();
       const todayKey = new Date().toDateString();
       
-      // Day counter
       document.getElementById('dayNumber').textContent = currentDay;
       document.getElementById('progressFill').style.width = ((currentDay / 75) * 100) + '%';
       document.getElementById('progressText').textContent = `${Math.round((currentDay / 75) * 100)}% complete`;
       
-      // Stats
       const completedCount = data.completedDays.length;
       document.getElementById('daysComplete').textContent = completedCount;
       document.getElementById('daysLeft').textContent = 75 - currentDay + 1;
       document.getElementById('streak').textContent = calculateStreak(data);
       
-      // Load today's tasks
       const todayTasks = data.todayTasks[todayKey] || {};
-      TASKS.forEach(task => {
+      TASKS.filter(t => t !== 'water').forEach(task => {
         const checkbox = document.getElementById(task);
         checkbox.checked = todayTasks[task] || false;
         checkbox.parentElement.classList.toggle('completed', checkbox.checked);
       });
       
-      // Update complete button
-      const allChecked = TASKS.every(task => document.getElementById(task).checked);
+      // Water bottles
+      updateWaterUI(data);
+      
+      const allChecked = TASKS.every(task => {
+        if (task === 'water') return (data.waterBottles[todayKey] || 0) >= 5;
+        return document.getElementById(task).checked;
+      });
+      
       const btn = document.getElementById('completeBtn');
       const isCompleted = data.completedDays.includes(todayKey);
       btn.textContent = isCompleted ? `Day ${currentDay} Complete! ✓` : `Complete Day ${currentDay} ✓`;
       btn.disabled = !allChecked || isCompleted;
       btn.classList.toggle('completed', isCompleted);
       
-      // Weight history
       renderWeightHistory(data.weights);
-      
-      // Calendar
       renderCalendar(data.completedDays, currentDay);
     }
     
@@ -383,16 +500,14 @@
         checkDate.setDate(checkDate.getDate() - i);
         if (data.completedDays.includes(checkDate.toDateString())) {
           streak++;
-        } else if (i > 0) {
-          break;
-        }
+        } else if (i > 0) break;
       }
       return streak;
     }
     
     function renderWeightHistory(weights) {
       const container = document.getElementById('weightHistory');
-      if (weights.length === 0) {
+      if (!weights || weights.length === 0) {
         container.innerHTML = '<p style="opacity:0.5;text-align:center;padding:20px;">No weight entries yet</p>';
         return;
       }
@@ -413,19 +528,16 @@
         const isComplete = completedDays.includes(dayDate.toDateString());
         const isToday = i === currentDay;
         const isFuture = i > currentDay;
-        
         let classes = 'calendar-day';
         if (isComplete) classes += ' complete';
         if (isToday) classes += ' today';
         if (isFuture) classes += ' future';
-        
         html += `<div class="${classes}">${i}</div>`;
       }
       container.innerHTML = html;
     }
     
-    // Task checkbox handlers
-    TASKS.forEach(task => {
+    TASKS.filter(t => t !== 'water').forEach(task => {
       document.getElementById(task).addEventListener('change', function() {
         const data = loadData();
         const todayKey = new Date().toDateString();
@@ -443,9 +555,7 @@
       if (!data.completedDays.includes(todayKey)) {
         data.completedDays.push(todayKey);
         saveData(data);
-        updateUI();
-        // Celebration
-        document.getElementById('completeBtn').textContent = '🎉 Amazing work! 🎉';
+        document.getElementById('completeBtn').textContent = '🎉 Amazing work, Ericka! 🎉';
         setTimeout(updateUI, 2000);
       }
     }
@@ -454,15 +564,14 @@
       const input = document.getElementById('weightInput');
       const weight = parseFloat(input.value);
       if (isNaN(weight) || weight <= 0) return;
-      
       const data = loadData();
+      if (!data.weights) data.weights = [];
       data.weights.push({ date: new Date().toISOString(), weight });
       saveData(data);
       input.value = '';
       updateUI();
     }
     
-    // Initialize
     displayQuote();
     updateUI();
   </script>
