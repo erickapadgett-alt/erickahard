@@ -2,7 +2,7 @@
   "name": "Ericka's 75 Hard",
   "short_name": "75 Hard",
   "description": "75 Hard Challenge Tracker",
-  "start_url": "/?v=2",
+  "start_url": "/?v=3",
   "display": "standalone",
   "background_color": "#1a1a2e",
   "theme_color": "#9E1B32",
