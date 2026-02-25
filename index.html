@@ -6,21 +6,61 @@
   <title>Ericka's 75 Hard</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-primary: #1a1a2e;
+      --bg-secondary: #16213e;
+      --bg-accent: #0f3460;
+      --accent: #e94560;
+      --accent-light: #ff6b6b;
+      --text: #ffffff;
+      --text-muted: rgba(255,255,255,0.7);
+      --card-bg: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.1);
+    }
+    .light-mode {
+      --bg-primary: #f5f7fa;
+      --bg-secondary: #e8ecf1;
+      --bg-accent: #dde4ec;
+      --accent: #e94560;
+      --accent-light: #ff6b6b;
+      --text: #1a1a2e;
+      --text-muted: rgba(26,26,46,0.7);
+      --card-bg: rgba(255,255,255,0.9);
+      --border: rgba(0,0,0,0.1);
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', -apple-system, sans-serif;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-accent) 100%);
       min-height: 100vh;
-      color: white;
+      color: var(--text);
       padding: 20px;
       padding-bottom: 100px;
+      transition: all 0.3s ease;
     }
     .container { max-width: 500px; margin: 0 auto; }
+    
+    /* Theme Toggle */
+    .theme-toggle {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: var(--card-bg);
+      border: none;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      font-size: 1.3em;
+      cursor: pointer;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    
     .user-badge {
       text-align: center;
       margin-bottom: 15px;
       font-size: 0.9em;
-      opacity: 0.7;
+      opacity: 0.8;
     }
     .user-badge span { 
       background: rgba(233, 69, 96, 0.3);
@@ -30,46 +70,76 @@
     
     /* Quote Banner */
     .quote-banner {
-      background: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%);
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
       border-radius: 16px;
       padding: 20px;
       margin-bottom: 20px;
       text-align: center;
       box-shadow: 0 10px 40px rgba(233, 69, 96, 0.3);
+      color: white;
     }
     .quote-text { font-size: 1.1em; font-style: italic; line-height: 1.5; }
     .quote-author { margin-top: 10px; font-size: 0.9em; opacity: 0.9; }
     
     /* Day Counter */
     .day-counter {
-      background: rgba(255,255,255,0.1);
+      background: var(--card-bg);
       border-radius: 20px;
       padding: 30px;
       text-align: center;
       margin-bottom: 20px;
       backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
     }
     .day-label { font-size: 1.2em; opacity: 0.8; text-transform: uppercase; letter-spacing: 2px; }
-    .day-number { font-size: 5em; font-weight: 900; color: #e94560; line-height: 1; }
+    .day-number { font-size: 5em; font-weight: 900; color: var(--accent); line-height: 1; }
     .day-of { font-size: 1.5em; opacity: 0.7; }
     .progress-bar {
-      background: rgba(255,255,255,0.2);
+      background: var(--border);
       border-radius: 10px;
       height: 12px;
       margin-top: 20px;
       overflow: hidden;
     }
     .progress-fill {
-      background: linear-gradient(90deg, #e94560, #ff6b6b);
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
       height: 100%;
       border-radius: 10px;
       transition: width 0.5s ease;
     }
     .progress-text { margin-top: 8px; font-size: 0.9em; opacity: 0.7; }
     
+    /* Milestone Celebration */
+    .milestone-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: gold;
+      color: #333;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.8em;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+    }
+    
     /* Sections */
     .section {
-      background: rgba(255,255,255,0.08);
+      background: var(--card-bg);
       border-radius: 16px;
       padding: 20px;
       margin-bottom: 15px;
@@ -85,18 +155,50 @@
     }
     .section-icon { font-size: 1.3em; }
     
+    /* Partner Section */
+    .partner-card {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      background: rgba(0,200,150,0.1);
+      border-radius: 12px;
+      border: 1px solid rgba(0,200,150,0.3);
+    }
+    .partner-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00c896, #00d9a5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+    }
+    .partner-info { flex: 1; }
+    .partner-name { font-weight: 700; font-size: 1.1em; }
+    .partner-stats { font-size: 0.9em; opacity: 0.8; margin-top: 3px; }
+    .partner-streak { 
+      background: var(--accent);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: 700;
+    }
+    
+    /* Tasks */
     .task {
       display: flex;
       align-items: center;
       padding: 12px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid var(--border);
     }
     .task:last-child { border-bottom: none; }
     .task input[type="checkbox"] {
       width: 24px;
       height: 24px;
       margin-right: 15px;
-      accent-color: #e94560;
+      accent-color: var(--accent);
       cursor: pointer;
     }
     .task-label { flex: 1; font-size: 1em; }
@@ -106,30 +208,14 @@
     }
     
     /* Water Tracker */
-    .water-tracker {
-      padding: 15px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-    .water-label {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-    .water-count { 
-      font-size: 0.9em;
-      color: #4fc3f7;
-      font-weight: 600;
-    }
-    .water-bottles {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-    }
+    .water-tracker { padding: 15px 0; border-bottom: 1px solid var(--border); }
+    .water-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .water-count { font-size: 0.9em; color: #4fc3f7; font-weight: 600; }
+    .water-bottles { display: flex; gap: 8px; justify-content: center; }
     .bottle {
       width: 50px;
       height: 70px;
-      background: rgba(255,255,255,0.1);
+      background: var(--border);
       border-radius: 8px;
       cursor: pointer;
       display: flex;
@@ -151,93 +237,172 @@
       background: linear-gradient(180deg, #4fc3f7, #0288d1);
       transition: height 0.3s ease;
       z-index: 0;
-      border-radius: 0 0 6px 6px;
     }
-    .bottle.filled::before {
-      height: 100%;
+    .bottle.filled::before { height: 100%; }
+    .bottle span { position: relative; z-index: 1; }
+    .bottle:hover { transform: scale(1.05); border-color: #4fc3f7; }
+    .bottle.filled { border-color: #4fc3f7; }
+    .water-complete { text-align: center; margin-top: 10px; font-size: 0.9em; color: #4fc3f7; opacity: 0; transition: opacity 0.3s; }
+    .water-complete.show { opacity: 1; }
+    
+    /* Book Tracker */
+    .book-tracker { margin-top: 15px; }
+    .book-input-row { display: flex; gap: 10px; margin-bottom: 10px; }
+    .book-input-row input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: var(--card-bg);
+      color: var(--text);
+      font-size: 0.95em;
+      outline: none;
     }
-    .bottle span {
-      position: relative;
-      z-index: 1;
+    .book-input-row input:focus { border-color: var(--accent); }
+    .book-input-row input::placeholder { color: var(--text-muted); }
+    .book-input-row button {
+      padding: 10px 15px;
+      background: var(--accent);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
     }
-    .bottle:hover {
-      transform: scale(1.05);
-      border-color: #4fc3f7;
-    }
-    .bottle.filled {
-      border-color: #4fc3f7;
-    }
-    .water-complete {
-      text-align: center;
-      margin-top: 10px;
+    .book-list { margin-top: 10px; }
+    .book-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
       font-size: 0.9em;
-      color: #4fc3f7;
-      opacity: 0;
-      transition: opacity 0.3s;
     }
-    .water-complete.show {
-      opacity: 1;
+    .book-title { flex: 1; }
+    .book-pages { color: var(--accent); font-weight: 600; }
+    
+    /* Measurements */
+    .measurement-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .measurement-item {
+      background: var(--border);
+      border-radius: 10px;
+      padding: 12px;
+    }
+    .measurement-label { font-size: 0.8em; opacity: 0.7; margin-bottom: 5px; }
+    .measurement-value { font-size: 1.3em; font-weight: 700; color: var(--accent); }
+    .measurement-input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--card-bg);
+      color: var(--text);
+      font-size: 1em;
+      margin-top: 5px;
     }
     
-    /* Weight Tracker */
-    .weight-input-group {
+    /* Weekly Reflection */
+    .reflection-prompt {
+      background: var(--border);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      font-style: italic;
+    }
+    .reflection-textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 15px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: var(--card-bg);
+      color: var(--text);
+      font-size: 1em;
+      resize: vertical;
+      outline: none;
+    }
+    .reflection-textarea:focus { border-color: var(--accent); }
+    .reflection-save {
+      margin-top: 10px;
+      padding: 12px 20px;
+      background: var(--accent);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+    }
+    .past-reflections { margin-top: 15px; }
+    .past-reflection {
+      background: var(--border);
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .past-reflection-week { font-weight: 700; color: var(--accent); margin-bottom: 5px; }
+    .past-reflection-text { font-size: 0.9em; opacity: 0.9; }
+    
+    /* Weight & Inputs */
+    .input-group {
       display: flex;
       gap: 10px;
       margin-bottom: 15px;
     }
-    .weight-input-group input {
+    .input-group input {
       flex: 1;
       padding: 12px 15px;
-      border: 2px solid rgba(255,255,255,0.2);
+      border: 2px solid var(--border);
       border-radius: 10px;
-      background: rgba(255,255,255,0.1);
-      color: white;
+      background: var(--card-bg);
+      color: var(--text);
       font-size: 1.1em;
       outline: none;
     }
-    .weight-input-group input:focus { border-color: #e94560; }
-    .weight-input-group input::placeholder { color: rgba(255,255,255,0.4); }
-    .weight-input-group button {
+    .input-group input:focus { border-color: var(--accent); }
+    .input-group input::placeholder { color: var(--text-muted); }
+    .input-group button {
       padding: 12px 20px;
-      background: #e94560;
+      background: var(--accent);
       border: none;
       border-radius: 10px;
       color: white;
       font-weight: 600;
       cursor: pointer;
     }
-    .weight-history { max-height: 150px; overflow-y: auto; }
-    .weight-entry {
+    .history { max-height: 150px; overflow-y: auto; }
+    .history-entry {
       display: flex;
       justify-content: space-between;
       padding: 8px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid var(--border);
       font-size: 0.95em;
     }
-    .weight-date { opacity: 0.6; }
-    .weight-value { font-weight: 600; color: #ff6b6b; }
+    .history-date { opacity: 0.6; }
+    .history-value { font-weight: 600; color: var(--accent-light); }
     
     /* Stats */
-    .stats-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
+    .stats-row { display: flex; gap: 10px; margin-bottom: 15px; }
     .stat-box {
       flex: 1;
-      background: rgba(255,255,255,0.08);
+      background: var(--card-bg);
       border-radius: 12px;
       padding: 15px;
       text-align: center;
     }
-    .stat-value { font-size: 1.8em; font-weight: 700; color: #e94560; }
+    .stat-value { font-size: 1.8em; font-weight: 700; color: var(--accent); }
     .stat-label { font-size: 0.8em; opacity: 0.7; margin-top: 5px; }
     
     /* Complete Button */
     .complete-btn {
       width: 100%;
       padding: 18px;
-      background: linear-gradient(135deg, #e94560, #ff6b6b);
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
       border: none;
       border-radius: 12px;
       color: white;
@@ -246,35 +411,51 @@
       cursor: pointer;
       margin-top: 10px;
       box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3);
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.2s;
     }
     .complete-btn:hover { transform: translateY(-2px); }
     .complete-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .complete-btn.completed { background: linear-gradient(135deg, #2ecc71, #27ae60); }
     
     /* Calendar */
-    .calendar {
-      display: grid;
-      grid-template-columns: repeat(15, 1fr);
-      gap: 4px;
-      margin-top: 15px;
-    }
+    .calendar { display: grid; grid-template-columns: repeat(15, 1fr); gap: 4px; margin-top: 15px; }
     .calendar-day {
       aspect-ratio: 1;
       border-radius: 4px;
-      background: rgba(255,255,255,0.1);
+      background: var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 0.65em;
       font-weight: 600;
     }
-    .calendar-day.complete { background: #2ecc71; }
-    .calendar-day.today { border: 2px solid #e94560; }
+    .calendar-day.complete { background: #2ecc71; color: white; }
+    .calendar-day.today { border: 2px solid var(--accent); }
     .calendar-day.future { opacity: 0.3; }
+    .calendar-day.milestone { background: gold; color: #333; }
+    
+    /* Tabs */
+    .tabs { display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap; }
+    .tab {
+      flex: 1;
+      min-width: 80px;
+      padding: 10px;
+      background: var(--border);
+      border: none;
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.85em;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab.active { background: var(--accent); color: white; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
   </style>
 </head>
 <body>
+  <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+  
   <div class="container">
     <div class="user-badge"><span>💪 Ericka's Journey</span></div>
     
@@ -283,7 +464,8 @@
       <p class="quote-author" id="author"></p>
     </div>
     
-    <div class="day-counter">
+    <div class="day-counter" id="dayCounter">
+      <div class="milestone-badge" id="milestoneBadge" style="display:none">🏆 MILESTONE!</div>
       <p class="day-label">Current Day</p>
       <p class="day-number" id="dayNumber">2</p>
       <p class="day-of">of 75</p>
@@ -293,10 +475,23 @@
       <p class="progress-text" id="progressText"></p>
     </div>
     
+    <!-- Partner Accountability -->
+    <div class="section">
+      <div class="section-title"><span class="section-icon">👯‍♀️</span> Partner Check-In</div>
+      <div class="partner-card" id="partnerCard">
+        <div class="partner-avatar">C</div>
+        <div class="partner-info">
+          <div class="partner-name">Courtney</div>
+          <div class="partner-stats" id="partnerStats">Loading...</div>
+        </div>
+        <div class="partner-streak" id="partnerStreak">🔥 0</div>
+      </div>
+    </div>
+    
     <div class="stats-row">
       <div class="stat-box">
         <div class="stat-value" id="daysComplete">1</div>
-        <div class="stat-label">Days Complete</div>
+        <div class="stat-label">Days Done</div>
       </div>
       <div class="stat-box">
         <div class="stat-value" id="daysLeft">74</div>
@@ -311,56 +506,97 @@
     <div class="section">
       <div class="section-title"><span class="section-icon">✅</span> Today's Tasks</div>
       
-      <div class="task" data-task="diet">
-        <input type="checkbox" id="diet">
-        <label class="task-label" for="diet">Follow diet (no cheat meals, no alcohol)</label>
-      </div>
-      <div class="task" data-task="workout1">
-        <input type="checkbox" id="workout1">
-        <label class="task-label" for="workout1">Workout #1 (45 min)</label>
-      </div>
-      <div class="task" data-task="workout2">
-        <input type="checkbox" id="workout2">
-        <label class="task-label" for="workout2">Workout #2 - Outdoor (45 min)</label>
-      </div>
+      <div class="task"><input type="checkbox" id="diet"><label class="task-label" for="diet">Follow diet (no cheat meals, no alcohol)</label></div>
+      <div class="task"><input type="checkbox" id="workout1"><label class="task-label" for="workout1">Workout #1 (45 min)</label></div>
+      <div class="task"><input type="checkbox" id="workout2"><label class="task-label" for="workout2">Workout #2 - Outdoor (45 min)</label></div>
       
-      <!-- Water Bottle Tracker -->
       <div class="water-tracker">
         <div class="water-label">
-          <span>💧 Water (1 gallon = 5 bottles)</span>
-          <span class="water-count" id="waterCount">0/5 bottles</span>
+          <span>💧 Water (5 bottles = 1 gallon)</span>
+          <span class="water-count" id="waterCount">0/5</span>
         </div>
-        <div class="water-bottles" id="waterBottles">
-          <div class="bottle" data-bottle="1" onclick="toggleBottle(1)"><span>🍶</span></div>
-          <div class="bottle" data-bottle="2" onclick="toggleBottle(2)"><span>🍶</span></div>
-          <div class="bottle" data-bottle="3" onclick="toggleBottle(3)"><span>🍶</span></div>
-          <div class="bottle" data-bottle="4" onclick="toggleBottle(4)"><span>🍶</span></div>
-          <div class="bottle" data-bottle="5" onclick="toggleBottle(5)"><span>🍶</span></div>
+        <div class="water-bottles">
+          <div class="bottle" onclick="toggleBottle(1)"><span>🍶</span></div>
+          <div class="bottle" onclick="toggleBottle(2)"><span>🍶</span></div>
+          <div class="bottle" onclick="toggleBottle(3)"><span>🍶</span></div>
+          <div class="bottle" onclick="toggleBottle(4)"><span>🍶</span></div>
+          <div class="bottle" onclick="toggleBottle(5)"><span>🍶</span></div>
         </div>
         <div class="water-complete" id="waterComplete">🎉 1 Gallon Complete!</div>
       </div>
       
-      <div class="task" data-task="reading">
-        <input type="checkbox" id="reading">
-        <label class="task-label" for="reading">Read 10 pages (non-fiction)</label>
-      </div>
-      <div class="task" data-task="photo">
-        <input type="checkbox" id="photo">
-        <label class="task-label" for="photo">Take progress photo</label>
-      </div>
+      <div class="task"><input type="checkbox" id="reading"><label class="task-label" for="reading">Read 10 pages (non-fiction)</label></div>
+      <div class="task"><input type="checkbox" id="photo"><label class="task-label" for="photo">Take progress photo</label></div>
       
-      <button class="complete-btn" id="completeBtn" onclick="completeDay()">
-        Complete Day ✓
-      </button>
+      <button class="complete-btn" id="completeBtn" onclick="completeDay()">Complete Day ✓</button>
     </div>
     
+    <!-- Book Tracker -->
     <div class="section">
-      <div class="section-title"><span class="section-icon">⚖️</span> Weight Tracker</div>
-      <div class="weight-input-group">
-        <input type="number" id="weightInput" placeholder="Enter weight (lbs)" step="0.1">
-        <button onclick="logWeight()">Log</button>
+      <div class="section-title"><span class="section-icon">📚</span> Book Tracker</div>
+      <div class="book-input-row">
+        <input type="text" id="bookTitle" placeholder="Book title">
+        <input type="number" id="bookPages" placeholder="Pages" style="max-width:80px">
+        <button onclick="addBook()">+</button>
       </div>
-      <div class="weight-history" id="weightHistory"></div>
+      <div class="book-list" id="bookList"></div>
+      <div style="margin-top:10px;text-align:center;opacity:0.7">
+        Total pages read: <strong id="totalPages">0</strong>
+      </div>
+    </div>
+    
+    <!-- Body Measurements -->
+    <div class="section">
+      <div class="section-title"><span class="section-icon">📏</span> Body Measurements</div>
+      <div class="tabs">
+        <button class="tab active" onclick="showMeasureTab('current')">Current</button>
+        <button class="tab" onclick="showMeasureTab('log')">Log New</button>
+        <button class="tab" onclick="showMeasureTab('history')">History</button>
+      </div>
+      <div id="measureCurrent" class="tab-content active">
+        <div class="measurement-grid" id="measurementGrid"></div>
+      </div>
+      <div id="measureLog" class="tab-content">
+        <div class="measurement-grid">
+          <div class="measurement-item">
+            <div class="measurement-label">Weight (lbs)</div>
+            <input class="measurement-input" type="number" id="mWeight" step="0.1">
+          </div>
+          <div class="measurement-item">
+            <div class="measurement-label">Chest (in)</div>
+            <input class="measurement-input" type="number" id="mChest" step="0.1">
+          </div>
+          <div class="measurement-item">
+            <div class="measurement-label">Waist (in)</div>
+            <input class="measurement-input" type="number" id="mWaist" step="0.1">
+          </div>
+          <div class="measurement-item">
+            <div class="measurement-label">Hips (in)</div>
+            <input class="measurement-input" type="number" id="mHips" step="0.1">
+          </div>
+          <div class="measurement-item">
+            <div class="measurement-label">Arms (in)</div>
+            <input class="measurement-input" type="number" id="mArms" step="0.1">
+          </div>
+          <div class="measurement-item">
+            <div class="measurement-label">Thighs (in)</div>
+            <input class="measurement-input" type="number" id="mThighs" step="0.1">
+          </div>
+        </div>
+        <button class="complete-btn" onclick="saveMeasurements()" style="margin-top:0">Save Measurements</button>
+      </div>
+      <div id="measureHistory" class="tab-content">
+        <div class="history" id="measurementHistory"></div>
+      </div>
+    </div>
+    
+    <!-- Weekly Reflection -->
+    <div class="section" id="reflectionSection">
+      <div class="section-title"><span class="section-icon">📝</span> Weekly Reflection</div>
+      <div class="reflection-prompt" id="reflectionPrompt"></div>
+      <textarea class="reflection-textarea" id="reflectionText" placeholder="Write your thoughts..."></textarea>
+      <button class="reflection-save" onclick="saveReflection()">Save Reflection</button>
+      <div class="past-reflections" id="pastReflections"></div>
     </div>
     
     <div class="section">
@@ -368,43 +604,55 @@
       <div class="calendar" id="calendar"></div>
     </div>
   </div>
+  
+  <canvas class="confetti" id="confetti"></canvas>
 
   <script>
+    const USER = 'ericka';
+    const PARTNER = 'courtney';
     const START_DATE = new Date('2026-02-24');
-    const STORAGE_KEY = 'ericka_75hard';
+    const STORAGE_KEY = 'ericka_75hard_v2';
     const TASKS = ['diet', 'workout1', 'workout2', 'water', 'reading', 'photo'];
+    const MILESTONES = [25, 50, 75];
+    
+    const WEEKLY_PROMPTS = [
+      "Week 1: Why did you start 75 Hard? What do you hope to achieve?",
+      "Week 2: What's been the hardest part so far? How are you pushing through?",
+      "Week 3: What positive changes have you noticed in yourself?",
+      "Week 4: How has your relationship with discipline changed?",
+      "Week 5: What have you learned about yourself this month?",
+      "Week 6: How has your mindset shifted since day 1?",
+      "Week 7: What will you carry with you after 75 Hard ends?",
+      "Week 8: What are you most proud of? How will you maintain these habits?",
+      "Week 9: Reflect on your transformation - mind, body, and spirit.",
+      "Week 10: You're almost there! What does finishing mean to you?",
+      "Week 11: Final stretch - what legacy does this challenge leave?"
+    ];
     
     const quotes = [
       { text: "The only bad workout is the one that didn't happen.", author: "Unknown" },
       { text: "Discipline is choosing between what you want now and what you want most.", author: "Abraham Lincoln" },
       { text: "The body achieves what the mind believes.", author: "Napoleon Hill" },
-      { text: "Success is not final, failure is not fatal.", author: "Winston Churchill" },
-      { text: "Don't wish for it. Work for it.", author: "Unknown" },
-      { text: "The pain you feel today will be the strength you feel tomorrow.", author: "Unknown" },
-      { text: "Your body can stand almost anything. It's your mind that you have to convince.", author: "Unknown" },
       { text: "75 Hard isn't about being perfect. It's about not quitting.", author: "Andy Frisella" },
       { text: "Mental toughness is doing the right thing regardless of how you feel.", author: "Andy Frisella" },
-      { text: "You don't have to be extreme, just consistent.", author: "Unknown" },
       { text: "Suffer the pain of discipline or suffer the pain of regret.", author: "Jim Rohn" },
-      { text: "Hard work beats talent when talent doesn't work hard.", author: "Tim Notke" },
       { text: "You got this, Ericka! 💪", author: "Your App" }
     ];
     
     function getCurrentDay() {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const start = new Date(START_DATE);
-      start.setHours(0, 0, 0, 0);
-      const diffTime = today - start;
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      return Math.max(1, Math.min(75, diffDays));
+      const today = new Date(); today.setHours(0,0,0,0);
+      const start = new Date(START_DATE); start.setHours(0,0,0,0);
+      return Math.max(1, Math.min(75, Math.floor((today - start) / 86400000) + 1));
     }
+    
+    function getWeek() { return Math.ceil(getCurrentDay() / 7); }
     
     function loadData() {
       const DAY1 = "Mon Feb 24 2026";
-      const stored = localStorage.getItem(STORAGE_KEY);
-      let data = stored ? JSON.parse(stored) : { completedDays: [], weights: [], todayTasks: {}, waterBottles: {} };
-      if (!data.waterBottles) data.waterBottles = {};
+      let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || {
+        completedDays: [], todayTasks: {}, waterBottles: {},
+        books: [], measurements: [], reflections: {}, theme: 'dark'
+      };
       if (!data.completedDays.includes(DAY1)) {
         data.completedDays.push(DAY1);
         saveData(data);
@@ -414,135 +662,274 @@
     
     function saveData(data) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      syncToPartner(data);
+    }
+    
+    async function syncToPartner(data) {
+      try {
+        const stats = {
+          daysComplete: data.completedDays.length,
+          streak: calculateStreak(data),
+          currentDay: getCurrentDay()
+        };
+        await fetch('/api/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user: USER, stats })
+        });
+      } catch(e) {}
+    }
+    
+    async function fetchPartner() {
+      try {
+        const res = await fetch(`/api/partner?partner=${PARTNER}`);
+        const stats = await res.json();
+        if (stats) {
+          document.getElementById('partnerStats').textContent = `Day ${stats.currentDay} • ${stats.daysComplete} days done`;
+          document.getElementById('partnerStreak').textContent = `🔥 ${stats.streak}`;
+        } else {
+          document.getElementById('partnerStats').textContent = 'Not synced yet';
+        }
+      } catch(e) {
+        document.getElementById('partnerStats').textContent = 'Offline';
+      }
+    }
+    
+    function toggleTheme() {
+      const data = loadData();
+      data.theme = data.theme === 'dark' ? 'light' : 'dark';
+      saveData(data);
+      applyTheme(data.theme);
+    }
+    
+    function applyTheme(theme) {
+      document.body.classList.toggle('light-mode', theme === 'light');
+      document.getElementById('themeBtn').textContent = theme === 'dark' ? '🌙' : '☀️';
     }
     
     function displayQuote() {
-      const quote = quotes[Math.floor(Math.random() * quotes.length)];
-      document.getElementById('quote').textContent = `"${quote.text}"`;
-      document.getElementById('author').textContent = `— ${quote.author}`;
+      const q = quotes[Math.floor(Math.random() * quotes.length)];
+      document.getElementById('quote').textContent = `"${q.text}"`;
+      document.getElementById('author').textContent = `— ${q.author}`;
     }
     
     function toggleBottle(num) {
       const data = loadData();
-      const todayKey = new Date().toDateString();
-      if (!data.waterBottles[todayKey]) data.waterBottles[todayKey] = 0;
-      
-      const currentCount = data.waterBottles[todayKey];
-      if (num <= currentCount) {
-        data.waterBottles[todayKey] = num - 1;
-      } else {
-        data.waterBottles[todayKey] = num;
-      }
-      
-      // Auto-check water task if 5 bottles done
-      if (!data.todayTasks[todayKey]) data.todayTasks[todayKey] = {};
-      data.todayTasks[todayKey].water = data.waterBottles[todayKey] >= 5;
-      
+      const key = new Date().toDateString();
+      if (!data.waterBottles[key]) data.waterBottles[key] = 0;
+      data.waterBottles[key] = num <= data.waterBottles[key] ? num - 1 : num;
+      if (!data.todayTasks[key]) data.todayTasks[key] = {};
+      data.todayTasks[key].water = data.waterBottles[key] >= 5;
       saveData(data);
       updateUI();
     }
     
-    function updateWaterUI(data) {
-      const todayKey = new Date().toDateString();
-      const count = data.waterBottles[todayKey] || 0;
-      
-      document.getElementById('waterCount').textContent = `${count}/5 bottles`;
-      document.querySelectorAll('.bottle').forEach((bottle, i) => {
-        bottle.classList.toggle('filled', i < count);
-      });
-      document.getElementById('waterComplete').classList.toggle('show', count >= 5);
+    function addBook() {
+      const title = document.getElementById('bookTitle').value.trim();
+      const pages = parseInt(document.getElementById('bookPages').value) || 0;
+      if (!title || !pages) return;
+      const data = loadData();
+      data.books.push({ title, pages, date: new Date().toISOString() });
+      saveData(data);
+      document.getElementById('bookTitle').value = '';
+      document.getElementById('bookPages').value = '';
+      updateUI();
     }
     
-    function updateUI() {
+    function showMeasureTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('measure' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+    }
+    
+    function saveMeasurements() {
       const data = loadData();
-      const currentDay = getCurrentDay();
-      const todayKey = new Date().toDateString();
-      
-      document.getElementById('dayNumber').textContent = currentDay;
-      document.getElementById('progressFill').style.width = ((currentDay / 75) * 100) + '%';
-      document.getElementById('progressText').textContent = `${Math.round((currentDay / 75) * 100)}% complete`;
-      
-      const completedCount = data.completedDays.length;
-      document.getElementById('daysComplete').textContent = completedCount;
-      document.getElementById('daysLeft').textContent = 75 - currentDay + 1;
-      document.getElementById('streak').textContent = calculateStreak(data);
-      
-      const todayTasks = data.todayTasks[todayKey] || {};
-      TASKS.filter(t => t !== 'water').forEach(task => {
-        const checkbox = document.getElementById(task);
-        checkbox.checked = todayTasks[task] || false;
-        checkbox.parentElement.classList.toggle('completed', checkbox.checked);
-      });
-      
-      // Water bottles
-      updateWaterUI(data);
-      
-      const allChecked = TASKS.every(task => {
-        if (task === 'water') return (data.waterBottles[todayKey] || 0) >= 5;
-        return document.getElementById(task).checked;
-      });
-      
-      const btn = document.getElementById('completeBtn');
-      const isCompleted = data.completedDays.includes(todayKey);
-      btn.textContent = isCompleted ? `Day ${currentDay} Complete! ✓` : `Complete Day ${currentDay} ✓`;
-      btn.disabled = !allChecked || isCompleted;
-      btn.classList.toggle('completed', isCompleted);
-      
-      renderWeightHistory(data.weights);
-      renderCalendar(data.completedDays, currentDay);
+      const m = {
+        date: new Date().toISOString(),
+        weight: parseFloat(document.getElementById('mWeight').value) || null,
+        chest: parseFloat(document.getElementById('mChest').value) || null,
+        waist: parseFloat(document.getElementById('mWaist').value) || null,
+        hips: parseFloat(document.getElementById('mHips').value) || null,
+        arms: parseFloat(document.getElementById('mArms').value) || null,
+        thighs: parseFloat(document.getElementById('mThighs').value) || null
+      };
+      data.measurements.push(m);
+      saveData(data);
+      ['mWeight','mChest','mWaist','mHips','mArms','mThighs'].forEach(id => document.getElementById(id).value = '');
+      updateUI();
+      alert('Measurements saved! 💪');
+    }
+    
+    function saveReflection() {
+      const data = loadData();
+      const week = getWeek();
+      const text = document.getElementById('reflectionText').value.trim();
+      if (!text) return;
+      data.reflections[week] = { text, date: new Date().toISOString() };
+      saveData(data);
+      document.getElementById('reflectionText').value = '';
+      updateUI();
+      alert('Reflection saved! 📝');
     }
     
     function calculateStreak(data) {
       let streak = 0;
       const today = new Date();
       for (let i = 0; i < 75; i++) {
-        const checkDate = new Date(today);
-        checkDate.setDate(checkDate.getDate() - i);
-        if (data.completedDays.includes(checkDate.toDateString())) {
-          streak++;
-        } else if (i > 0) break;
+        const d = new Date(today); d.setDate(d.getDate() - i);
+        if (data.completedDays.includes(d.toDateString())) streak++;
+        else if (i > 0) break;
       }
       return streak;
     }
     
-    function renderWeightHistory(weights) {
-      const container = document.getElementById('weightHistory');
-      if (!weights || weights.length === 0) {
-        container.innerHTML = '<p style="opacity:0.5;text-align:center;padding:20px;">No weight entries yet</p>';
-        return;
+    function checkMilestone(day) {
+      if (MILESTONES.includes(day)) {
+        document.getElementById('milestoneBadge').style.display = 'block';
+        launchConfetti();
       }
-      container.innerHTML = weights.slice(-10).reverse().map(w => `
-        <div class="weight-entry">
-          <span class="weight-date">${new Date(w.date).toLocaleDateString()}</span>
-          <span class="weight-value">${w.weight} lbs</span>
-        </div>
-      `).join('');
     }
     
-    function renderCalendar(completedDays, currentDay) {
-      const container = document.getElementById('calendar');
-      let html = '';
+    function launchConfetti() {
+      const canvas = document.getElementById('confetti');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const particles = [];
+      for (let i = 0; i < 150; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          r: Math.random() * 6 + 4,
+          color: ['#e94560','#ff6b6b','#ffd700','#00c896','#4fc3f7'][Math.floor(Math.random()*5)],
+          vy: Math.random() * 3 + 2,
+          vx: Math.random() * 2 - 1
+        });
+      }
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let active = false;
+        particles.forEach(p => {
+          if (p.y < canvas.height) {
+            active = true;
+            p.y += p.vy;
+            p.x += p.vx;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+          }
+        });
+        if (active) requestAnimationFrame(animate);
+      }
+      animate();
+    }
+    
+    function updateUI() {
+      const data = loadData();
+      const day = getCurrentDay();
+      const todayKey = new Date().toDateString();
+      
+      applyTheme(data.theme || 'dark');
+      
+      // Day counter
+      document.getElementById('dayNumber').textContent = day;
+      document.getElementById('progressFill').style.width = ((day/75)*100)+'%';
+      document.getElementById('progressText').textContent = Math.round((day/75)*100)+'% complete';
+      
+      // Stats
+      document.getElementById('daysComplete').textContent = data.completedDays.length;
+      document.getElementById('daysLeft').textContent = 75 - day + 1;
+      document.getElementById('streak').textContent = calculateStreak(data);
+      
+      // Tasks
+      const todayTasks = data.todayTasks[todayKey] || {};
+      TASKS.filter(t=>t!=='water').forEach(task => {
+        const cb = document.getElementById(task);
+        cb.checked = todayTasks[task] || false;
+        cb.parentElement.classList.toggle('completed', cb.checked);
+      });
+      
+      // Water
+      const wc = data.waterBottles[todayKey] || 0;
+      document.getElementById('waterCount').textContent = wc+'/5';
+      document.querySelectorAll('.bottle').forEach((b,i) => b.classList.toggle('filled', i < wc));
+      document.getElementById('waterComplete').classList.toggle('show', wc >= 5);
+      
+      // Complete button
+      const allDone = TASKS.every(t => t==='water' ? wc>=5 : document.getElementById(t).checked);
+      const btn = document.getElementById('completeBtn');
+      const done = data.completedDays.includes(todayKey);
+      btn.textContent = done ? `Day ${day} Complete! ✓` : `Complete Day ${day} ✓`;
+      btn.disabled = !allDone || done;
+      btn.classList.toggle('completed', done);
+      
+      // Books
+      const bookList = document.getElementById('bookList');
+      const books = data.books || [];
+      bookList.innerHTML = books.length ? books.slice(-5).reverse().map(b => 
+        `<div class="book-item"><span class="book-title">📖 ${b.title}</span><span class="book-pages">${b.pages} pg</span></div>`
+      ).join('') : '<p style="opacity:0.5;text-align:center">No books logged yet</p>';
+      document.getElementById('totalPages').textContent = books.reduce((s,b) => s + b.pages, 0);
+      
+      // Measurements
+      const ms = data.measurements || [];
+      const latest = ms[ms.length - 1] || {};
+      const grid = document.getElementById('measurementGrid');
+      grid.innerHTML = ['weight','chest','waist','hips','arms','thighs'].map(k => 
+        `<div class="measurement-item"><div class="measurement-label">${k.charAt(0).toUpperCase()+k.slice(1)}</div><div class="measurement-value">${latest[k] || '—'}</div></div>`
+      ).join('');
+      
+      const mHistory = document.getElementById('measurementHistory');
+      mHistory.innerHTML = ms.length ? ms.slice(-5).reverse().map(m => 
+        `<div class="history-entry"><span class="history-date">${new Date(m.date).toLocaleDateString()}</span><span class="history-value">${m.weight||'—'}lbs</span></div>`
+      ).join('') : '<p style="opacity:0.5;text-align:center">No measurements yet</p>';
+      
+      // Reflections
+      const week = getWeek();
+      document.getElementById('reflectionPrompt').textContent = WEEKLY_PROMPTS[week-1] || WEEKLY_PROMPTS[0];
+      const refl = data.reflections || {};
+      if (refl[week]) document.getElementById('reflectionText').value = refl[week].text;
+      
+      const past = document.getElementById('pastReflections');
+      const pastWeeks = Object.keys(refl).filter(w => w < week).sort((a,b) => b-a).slice(0,3);
+      past.innerHTML = pastWeeks.map(w => 
+        `<div class="past-reflection"><div class="past-reflection-week">Week ${w}</div><div class="past-reflection-text">${refl[w].text.substring(0,150)}...</div></div>`
+      ).join('');
+      
+      // Calendar
+      const cal = document.getElementById('calendar');
+      cal.innerHTML = '';
       for (let i = 1; i <= 75; i++) {
-        const dayDate = new Date(START_DATE);
-        dayDate.setDate(dayDate.getDate() + i - 1);
-        const isComplete = completedDays.includes(dayDate.toDateString());
-        const isToday = i === currentDay;
-        const isFuture = i > currentDay;
-        let classes = 'calendar-day';
-        if (isComplete) classes += ' complete';
-        if (isToday) classes += ' today';
-        if (isFuture) classes += ' future';
-        html += `<div class="${classes}">${i}</div>`;
+        const d = new Date(START_DATE); d.setDate(d.getDate() + i - 1);
+        const complete = data.completedDays.includes(d.toDateString());
+        const isToday = i === day;
+        const isFuture = i > day;
+        const isMilestone = MILESTONES.includes(i);
+        let cls = 'calendar-day';
+        if (complete) cls += ' complete';
+        if (isToday) cls += ' today';
+        if (isFuture) cls += ' future';
+        if (isMilestone && complete) cls += ' milestone';
+        cal.innerHTML += `<div class="${cls}">${i}</div>`;
       }
-      container.innerHTML = html;
+      
+      // Check milestone
+      if (data.completedDays.includes(todayKey) && MILESTONES.includes(day)) {
+        checkMilestone(day);
+      }
+      
+      fetchPartner();
     }
     
-    TASKS.filter(t => t !== 'water').forEach(task => {
+    // Task handlers
+    TASKS.filter(t=>t!=='water').forEach(task => {
       document.getElementById(task).addEventListener('change', function() {
         const data = loadData();
-        const todayKey = new Date().toDateString();
-        if (!data.todayTasks[todayKey]) data.todayTasks[todayKey] = {};
-        data.todayTasks[todayKey][task] = this.checked;
+        const key = new Date().toDateString();
+        if (!data.todayTasks[key]) data.todayTasks[key] = {};
+        data.todayTasks[key][task] = this.checked;
         this.parentElement.classList.toggle('completed', this.checked);
         saveData(data);
         updateUI();
@@ -551,25 +938,14 @@
     
     function completeDay() {
       const data = loadData();
-      const todayKey = new Date().toDateString();
-      if (!data.completedDays.includes(todayKey)) {
-        data.completedDays.push(todayKey);
+      const key = new Date().toDateString();
+      if (!data.completedDays.includes(key)) {
+        data.completedDays.push(key);
         saveData(data);
         document.getElementById('completeBtn').textContent = '🎉 Amazing work, Ericka! 🎉';
+        if (MILESTONES.includes(getCurrentDay())) launchConfetti();
         setTimeout(updateUI, 2000);
       }
-    }
-    
-    function logWeight() {
-      const input = document.getElementById('weightInput');
-      const weight = parseFloat(input.value);
-      if (isNaN(weight) || weight <= 0) return;
-      const data = loadData();
-      if (!data.weights) data.weights = [];
-      data.weights.push({ date: new Date().toISOString(), weight });
-      saveData(data);
-      input.value = '';
-      updateUI();
     }
     
     displayQuote();
