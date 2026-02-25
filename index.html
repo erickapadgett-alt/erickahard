@@ -656,13 +656,21 @@
     function getWeek() { return Math.ceil(getCurrentDay() / 7); }
     
     function loadData() {
-      const DAY1 = "Mon Feb 24 2026";
+      // Feb 24, 2026 is Tuesday, not Monday
+      const DAY1 = new Date('2026-02-24').toDateString(); // "Tue Feb 24 2026"
       let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || {
         completedDays: [], todayTasks: {}, waterBottles: {},
         books: [], measurements: [], reflections: {}, theme: 'dark'
       };
+      // Auto-complete Day 1 if not already done
       if (!data.completedDays.includes(DAY1)) {
         data.completedDays.push(DAY1);
+        saveData(data);
+      }
+      // Fix any old "Mon Feb 24 2026" entries
+      const wrongDay1 = "Mon Feb 24 2026";
+      if (data.completedDays.includes(wrongDay1) && !data.completedDays.includes(DAY1)) {
+        data.completedDays = data.completedDays.map(d => d === wrongDay1 ? DAY1 : d);
         saveData(data);
       }
       return data;
@@ -690,16 +698,18 @@
     
     async function fetchPartner() {
       try {
-        const res = await fetch(`https://seven5hard-sync.onrender.com/partner?partner=${PARTNER}`);
+        const res = await fetch(`https://seven5hard-sync.onrender.com/partner?name=${PARTNER}`);
         const stats = await res.json();
-        if (stats) {
-          document.getElementById('partnerStats').textContent = `Day ${stats.currentDay} • ${stats.daysComplete} days done`;
-          document.getElementById('partnerStreak').textContent = `🔥 ${stats.streak}`;
+        if (stats && stats.daysComplete !== undefined) {
+          document.getElementById('partnerStats').textContent = `Day ${stats.currentDay || getCurrentDay()} • ${stats.daysComplete} days done`;
+          document.getElementById('partnerStreak').textContent = `🔥 ${stats.streak || 0}`;
         } else {
           document.getElementById('partnerStats').textContent = 'Not synced yet';
+          document.getElementById('partnerStreak').textContent = '🔥 0';
         }
       } catch(e) {
         document.getElementById('partnerStats').textContent = 'Offline';
+        document.getElementById('partnerStreak').textContent = '—';
       }
     }
     
@@ -784,10 +794,21 @@
     function calculateStreak(data) {
       let streak = 0;
       const today = new Date();
-      for (let i = 0; i < 75; i++) {
-        const d = new Date(today); d.setDate(d.getDate() - i);
-        if (data.completedDays.includes(d.toDateString())) streak++;
-        else if (i > 0) break;
+      const todayStr = today.toDateString();
+      const todayComplete = data.completedDays.includes(todayStr);
+      
+      // If today is complete, count from today backwards
+      // If today is NOT complete, count from yesterday backwards
+      const startOffset = todayComplete ? 0 : 1;
+      
+      for (let i = startOffset; i < 75; i++) {
+        const d = new Date(today); 
+        d.setDate(d.getDate() - i);
+        if (data.completedDays.includes(d.toDateString())) {
+          streak++;
+        } else {
+          break; // Stop at first gap
+        }
       }
       return streak;
     }
