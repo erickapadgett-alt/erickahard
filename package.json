@@ -1,0 +1,12 @@
+{
+  "name": "75-hard-tracker",
+  "version": "1.0.0",
+  "description": "75 Hard Challenge Progress Tracker",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
