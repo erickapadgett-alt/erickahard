@@ -10,8 +10,8 @@
       --bg-primary: #1a1a2e;
       --bg-secondary: #16213e;
       --bg-accent: #0f3460;
-      --accent: #e94560;
-      --accent-light: #ff6b6b;
+      --accent: #9E1B32;
+      --accent-light: #FFD700;
       --text: #ffffff;
       --text-muted: rgba(255,255,255,0.7);
       --card-bg: rgba(255,255,255,0.08);
@@ -21,8 +21,8 @@
       --bg-primary: #f5f7fa;
       --bg-secondary: #e8ecf1;
       --bg-accent: #dde4ec;
-      --accent: #e94560;
-      --accent-light: #ff6b6b;
+      --accent: #9E1B32;
+      --accent-light: #FFD700;
       --text: #1a1a2e;
       --text-muted: rgba(26,26,46,0.7);
       --card-bg: rgba(255,255,255,0.9);
@@ -63,19 +63,19 @@
       opacity: 0.8;
     }
     .user-badge span { 
-      background: rgba(233, 69, 96, 0.3);
+      background: rgba(158, 27, 50, 0.3);
       padding: 5px 15px;
       border-radius: 20px;
     }
     
     /* Quote Banner */
     .quote-banner {
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+      background: linear-gradient(135deg, var(--accent) 0%, #CBA135 100%);
       border-radius: 16px;
       padding: 20px;
       margin-bottom: 20px;
       text-align: center;
-      box-shadow: 0 10px 40px rgba(233, 69, 96, 0.3);
+      box-shadow: 0 10px 40px rgba(158, 27, 50, 0.3);
       color: white;
     }
     .quote-text { font-size: 1.1em; font-style: italic; line-height: 1.5; }
@@ -103,7 +103,7 @@
       overflow: hidden;
     }
     .progress-fill {
-      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      background: linear-gradient(90deg, var(--accent), #CBA135);
       height: 100%;
       border-radius: 10px;
       transition: width 0.5s ease;
@@ -384,7 +384,7 @@
       font-size: 0.95em;
     }
     .history-date { opacity: 0.6; }
-    .history-value { font-weight: 600; color: var(--accent-light); }
+    .history-value { font-weight: 600; color: #CBA135; }
     
     /* Stats */
     .stats-row { display: flex; gap: 10px; margin-bottom: 15px; }
@@ -402,7 +402,7 @@
     .complete-btn {
       width: 100%;
       padding: 18px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      background: linear-gradient(135deg, var(--accent), #CBA135);
       border: none;
       border-radius: 12px;
       color: white;
@@ -410,7 +410,7 @@
       font-weight: 700;
       cursor: pointer;
       margin-top: 10px;
-      box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3);
+      box-shadow: 0 10px 30px rgba(158, 27, 50, 0.3);
       transition: transform 0.2s;
     }
     .complete-btn:hover { transform: translateY(-2px); }
@@ -802,7 +802,7 @@
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height - canvas.height,
           r: Math.random() * 6 + 4,
-          color: ['#e94560','#ff6b6b','#ffd700','#00c896','#4fc3f7'][Math.floor(Math.random()*5)],
+          color: ['#9E1B32','#FFD700','#ffd700','#00c896','#4fc3f7'][Math.floor(Math.random()*5)],
           vy: Math.random() * 3 + 2,
           vx: Math.random() * 2 - 1
         });
