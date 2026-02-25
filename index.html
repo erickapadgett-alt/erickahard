@@ -314,7 +314,16 @@
     }
     
     function loadData() {
-      return JSON.parse(localStorage.getItem('75hard_data') || '{"completedDays":[],"weights":[],"todayTasks":{}}');
+      const DAY1 = "Mon Feb 24 2026"; // Day 1 completed!
+      const stored = localStorage.getItem('75hard_data');
+      let data = stored ? JSON.parse(stored) : { completedDays: [], weights: [], todayTasks: {} };
+      
+      // Ensure Day 1 is marked complete
+      if (!data.completedDays.includes(DAY1)) {
+        data.completedDays.push(DAY1);
+        localStorage.setItem('75hard_data', JSON.stringify(data));
+      }
+      return data;
     }
     
     function saveData(data) {
