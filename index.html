@@ -718,6 +718,21 @@
         if (stored) data = JSON.parse(stored);
       } catch(e) { console.error('localStorage read error:', e); }
       
+      // Migrate from old storage keys if no data
+      if (!data) {
+        const oldKeys = ['ericka_75hard_v2', 'ericka_75hard_v1', 'ericka_75hard'];
+        for (const oldKey of oldKeys) {
+          try {
+            const oldData = localStorage.getItem(oldKey);
+            if (oldData) {
+              data = JSON.parse(oldData);
+              console.log('Migrated data from', oldKey);
+              break;
+            }
+          } catch(e) {}
+        }
+      }
+      
       if (!data) data = getDefaultData();
       
       // Ensure completedDays is an array
