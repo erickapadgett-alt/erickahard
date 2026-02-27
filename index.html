@@ -617,12 +617,57 @@
   <canvas class="confetti" id="confetti"></canvas>
 
   <script>
+    // Register Service Worker for PWA persistence
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then(() => console.log('SW registered'))
+        .catch(e => console.error('SW failed:', e));
+    }
+    
     const USER = 'ericka';
     const PARTNER = 'courtney';
     const START_DATE = new Date('2026-02-24');
-    const STORAGE_KEY = 'ericka_75hard_v2';
+    const STORAGE_KEY = 'ericka_75hard_v3';
     const TASKS = ['diet', 'workout1', 'workout2', 'water', 'reading', 'photo'];
     const MILESTONES = [25, 50, 75];
+    
+    // IndexedDB backup for better persistence
+    const DB_NAME = 'Ericka75HardDB';
+    const DB_STORE = 'appData';
+    let db = null;
+    
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, 1);
+        req.onerror = () => reject(req.error);
+        req.onsuccess = () => { db = req.result; resolve(db); };
+        req.onupgradeneeded = (e) => {
+          const d = e.target.result;
+          if (!d.objectStoreNames.contains(DB_STORE)) {
+            d.createObjectStore(DB_STORE);
+          }
+        };
+      });
+    }
+    
+    async function saveToIDB(data) {
+      if (!db) await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(DB_STORE, 'readwrite');
+        tx.objectStore(DB_STORE).put(data, 'main');
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+    
+    async function loadFromIDB() {
+      if (!db) await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(DB_STORE, 'readonly');
+        const req = tx.objectStore(DB_STORE).get('main');
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
     
     const WEEKLY_PROMPTS = [
       "Week 1: Why did you start 75 Hard? What do you hope to achieve?",
@@ -656,41 +701,80 @@
     
     function getWeek() { return Math.ceil(getCurrentDay() / 7); }
     
-    function loadData() {
-      // Feb 24, 2026 is Tuesday, not Monday
-      const DAY1 = new Date('2026-02-24').toDateString(); // "Tue Feb 24 2026"
-      let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || {
+    function getDefaultData() {
+      return {
         completedDays: [], todayTasks: {}, waterBottles: {},
         books: [], measurements: [], reflections: {}, theme: 'dark'
       };
+    }
+    
+    function loadData() {
+      const DAY1 = new Date('2026-02-24').toDateString();
       
-      // Aggressive migration: remove wrong entries and ensure correct Day 1
+      // Try localStorage first
+      let data = null;
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) data = JSON.parse(stored);
+      } catch(e) { console.error('localStorage read error:', e); }
+      
+      if (!data) data = getDefaultData();
+      
+      // Ensure completedDays is an array
+      if (!Array.isArray(data.completedDays)) data.completedDays = [];
+      if (!data.measurements) data.measurements = [];
+      if (!data.books) data.books = [];
+      if (!data.todayTasks) data.todayTasks = {};
+      if (!data.waterBottles) data.waterBottles = {};
+      
+      // Migration fixes
       const wrongDay1 = "Mon Feb 24 2026";
       let needsSave = false;
       
-      // Remove wrong day format if present
       if (data.completedDays.includes(wrongDay1)) {
         data.completedDays = data.completedDays.filter(d => d !== wrongDay1);
         needsSave = true;
       }
       
-      // Always ensure Day 1 is marked complete
       if (!data.completedDays.includes(DAY1)) {
         data.completedDays.push(DAY1);
         needsSave = true;
       }
       
       if (needsSave) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        // Don't call saveData here to avoid recursion, but sync
-        syncToPartner(data);
+        saveDataSync(data);
       }
+      
       return data;
     }
     
+    function saveDataSync(data) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        console.log('Saved to localStorage:', data.completedDays.length, 'days,', data.measurements.length, 'measurements');
+      } catch(e) { console.error('localStorage write error:', e); }
+    }
+    
     function saveData(data) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      saveDataSync(data);
+      // Also save to IndexedDB as backup
+      saveToIDB(data).catch(e => console.error('IDB save error:', e));
       syncToPartner(data);
+    }
+    
+    // Restore from IndexedDB if localStorage is empty
+    async function restoreFromBackup() {
+      const lsData = localStorage.getItem(STORAGE_KEY);
+      if (!lsData || lsData === 'null') {
+        try {
+          const idbData = await loadFromIDB();
+          if (idbData && idbData.completedDays && idbData.completedDays.length > 0) {
+            console.log('Restoring from IndexedDB backup');
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(idbData));
+            updateUI();
+          }
+        } catch(e) { console.error('IDB restore error:', e); }
+      }
     }
     
     async function syncToPartner(data) {
@@ -804,24 +888,35 @@
     }
     
     function calculateStreak(data) {
-      let streak = 0;
-      const today = new Date();
-      const todayStr = today.toDateString();
-      const todayComplete = data.completedDays.includes(todayStr);
+      // Count consecutive completed days ending at the most recent completed day
+      if (!data.completedDays || data.completedDays.length === 0) return 0;
       
-      // If today is complete, count from today backwards
-      // If today is NOT complete, count from yesterday backwards
-      const startOffset = todayComplete ? 0 : 1;
+      // Sort completed days by date
+      const sortedDays = data.completedDays
+        .map(d => new Date(d))
+        .sort((a, b) => b - a); // Most recent first
       
-      for (let i = startOffset; i < 75; i++) {
-        const d = new Date(today); 
-        d.setDate(d.getDate() - i);
-        if (data.completedDays.includes(d.toDateString())) {
+      let streak = 1;
+      for (let i = 0; i < sortedDays.length - 1; i++) {
+        const diff = (sortedDays[i] - sortedDays[i + 1]) / 86400000; // Days between
+        if (Math.abs(diff - 1) < 0.01) { // Consecutive (within 1 day)
           streak++;
         } else {
-          break; // Stop at first gap
+          break; // Gap found
         }
       }
+      
+      // Only count streak if it includes today or yesterday
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const mostRecent = new Date(sortedDays[0]);
+      mostRecent.setHours(0, 0, 0, 0);
+      const daysSinceLast = Math.floor((today - mostRecent) / 86400000);
+      
+      if (daysSinceLast > 1) {
+        return 0; // Streak broken - more than 1 day gap
+      }
+      
       return streak;
     }
     
@@ -989,8 +1084,24 @@
       }
     }
     
-    displayQuote();
-    updateUI();
+    // Initialize
+    (async function init() {
+      try {
+        await openDB();
+        await restoreFromBackup();
+      } catch(e) { console.error('Init error:', e); }
+      displayQuote();
+      updateUI();
+      
+      // Debug: log current state
+      const data = loadData();
+      console.log('Current state:', {
+        completedDays: data.completedDays,
+        measurements: data.measurements.length,
+        currentDay: getCurrentDay(),
+        streak: calculateStreak(data)
+      });
+    })();
   </script>
 </body>
 </html>
