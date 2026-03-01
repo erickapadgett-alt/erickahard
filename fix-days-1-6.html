@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Days 1-6</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; background: #1a1a2e; color: white; padding: 40px 20px; text-align: center; }
+    h1 { color: #9E1B32; }
+    button { background: #9E1B32; color: white; border: none; padding: 20px 40px; font-size: 1.2em; border-radius: 10px; margin: 10px; cursor: pointer; }
+    button:active { transform: scale(0.95); }
+    .success { background: #2ecc71; padding: 20px; border-radius: 10px; margin-top: 20px; }
+    pre { background: #0f3460; padding: 15px; border-radius: 8px; text-align: left; overflow-x: auto; font-size: 0.8em; }
+  </style>
+</head>
+<body>
+  <h1>🎯 Mark Days 1-6 Complete</h1>
+  <p>This will add Days 1-6 (Feb 24 - Mar 1) as completed.</p>
+  
+  <button onclick="addDays()">Add Days 1-6 ✓</button>
+  
+  <div id="result"></div>
+  
+  <script>
+    const STORAGE_KEY = 'ericka_75hard_v2';
+    
+    // Days 1-6: Feb 24 - Mar 1, 2026
+    const DAYS_TO_ADD = [
+      new Date('2026-02-24').toDateString(), // Day 1
+      new Date('2026-02-25').toDateString(), // Day 2
+      new Date('2026-02-26').toDateString(), // Day 3
+      new Date('2026-02-27').toDateString(), // Day 4
+      new Date('2026-02-28').toDateString(), // Day 5
+      new Date('2026-03-01').toDateString(), // Day 6
+    ];
+    
+    function addDays() {
+      let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || {
+        completedDays: [], todayTasks: {}, waterBottles: {},
+        books: [], measurements: [], reflections: {}, theme: 'dark'
+      };
+      
+      // Add each day if not already present
+      let added = 0;
+      DAYS_TO_ADD.forEach(day => {
+        if (!data.completedDays.includes(day)) {
+          data.completedDays.push(day);
+          added++;
+        }
+      });
+      
+      // Save
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      
+      document.getElementById('result').innerHTML = `
+        <div class="success">
+          <h2>✅ Done!</h2>
+          <p>Added ${added} days. Total days complete: ${data.completedDays.length}</p>
+          <p>Days marked complete:</p>
+          <ul style="text-align:left;display:inline-block;">
+            ${DAYS_TO_ADD.map((d,i) => `<li>Day ${i+1}: ${d}</li>`).join('')}
+          </ul>
+          <p><strong>Now go back to the main app!</strong></p>
+          <p><a href="/" style="color: #FFD700; font-size: 1.2em;">← Back to App</a></p>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
