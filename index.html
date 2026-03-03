@@ -742,26 +742,36 @@
       if (!data.todayTasks) data.todayTasks = {};
       if (!data.waterBottles) data.waterBottles = {};
       
-      // Migration fixes
-      const wrongDay1 = "Mon Feb 24 2026";
+      // Migration fixes - Updated 2026-03-03
+      // Ericka confirmed: Day 9 today, perfect 8-day streak (days 1-8 complete)
+      // DO NOT reset measurements or weight data
       let needsSave = false;
       
-      if (data.completedDays.includes(wrongDay1)) {
-        data.completedDays = data.completedDays.filter(d => d !== wrongDay1);
-        needsSave = true;
-      }
+      // Ensure days 1-8 are marked complete (Feb 23 - Mar 2, 2026)
+      const confirmedDays = [
+        new Date('2026-02-23').toDateString(), // Day 1
+        new Date('2026-02-24').toDateString(), // Day 2
+        new Date('2026-02-25').toDateString(), // Day 3
+        new Date('2026-02-26').toDateString(), // Day 4
+        new Date('2026-02-27').toDateString(), // Day 5
+        new Date('2026-02-28').toDateString(), // Day 6
+        new Date('2026-03-01').toDateString(), // Day 7
+        new Date('2026-03-02').toDateString(), // Day 8
+      ];
       
-      // Restore completed days 1-4 (Feb 23-26, 2026) - confirmed by Ericka
-      const day1 = new Date('2026-02-23').toDateString();
-      const day2 = new Date('2026-02-24').toDateString();
-      const day3 = new Date('2026-02-25').toDateString();
-      const day4 = new Date('2026-02-26').toDateString();
-      [day1, day2, day3, day4].forEach(d => {
+      confirmedDays.forEach(d => {
         if (!data.completedDays.includes(d)) {
           data.completedDays.push(d);
           needsSave = true;
         }
       });
+      
+      // Remove any incorrect/duplicate entries
+      const uniqueDays = [...new Set(data.completedDays)];
+      if (uniqueDays.length !== data.completedDays.length) {
+        data.completedDays = uniqueDays;
+        needsSave = true;
+      }
       
       if (needsSave) {
         saveDataSync(data);
