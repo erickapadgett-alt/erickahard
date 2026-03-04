@@ -246,7 +246,8 @@
   </div>
 
   <script>
-    const START = new Date('2026-02-24'); // Day 1 = Feb 24 (adjusted for Ericka's actual start)
+    // Day 1 = Feb 24, 2026. Use noon to avoid timezone issues
+    const START = new Date(2026, 1, 24, 12, 0, 0); // Month is 0-indexed, so 1 = February
     const KEY = 'ericka75hard_v4';
     const TASKS = ['diet', 'workout1', 'workout2', 'water', 'reading', 'photo'];
     
@@ -288,28 +289,20 @@
       if (!d.completedDays) d.completedDays = [];
       if (!d.weights) d.weights = [];
       
-      // ONE-TIME FIX: Ensure days 1-8 are marked complete (Feb 24 - Mar 3, 2026)
-      // Ericka confirmed 9-day streak as of Mar 4
-      if (!d.migrated_v4_streak_day9) {
-        const confirmedDates = [
-          'Mon Feb 24 2026', // Day 1
-          'Tue Feb 25 2026', // Day 2
-          'Wed Feb 26 2026', // Day 3
-          'Thu Feb 27 2026', // Day 4
-          'Fri Feb 28 2026', // Day 5
-          'Sat Mar 01 2026', // Day 6
-          'Sun Mar 02 2026', // Day 7
-          'Mon Mar 03 2026', // Day 8
-          'Tue Mar 04 2026', // Day 9
-        ];
-        confirmedDates.forEach(dateStr => {
-          if (!d.completedDays.includes(dateStr)) {
-            d.completedDays.push(dateStr);
-          }
-        });
-        d.migrated_v4_streak_day9 = true;
+      // NUCLEAR FIX: Clear all old data and set correct 9 completed days
+      // Ericka confirmed days 1-9 complete as of Mar 4
+      if (!d.nuclear_fix_v1) {
+        // Generate correct date strings for days 1-9
+        const correctDays = [];
+        for (let i = 0; i < 9; i++) {
+          const dt = new Date(2026, 1, 24 + i); // Feb 24 + i days
+          correctDays.push(dt.toDateString());
+        }
+        // Replace completedDays entirely
+        d.completedDays = correctDays;
+        d.nuclear_fix_v1 = true;
         save(d);
-        console.log('Fixed streak - days 1-9 marked complete');
+        console.log('Nuclear fix applied - days 1-9:', correctDays);
       }
       
       return d;
