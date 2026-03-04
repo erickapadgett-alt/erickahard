@@ -264,24 +264,54 @@
     }
     
     function load() {
+      let d = null;
       try {
-        const d = JSON.parse(localStorage.getItem(KEY));
-        if (d && d.completedDays) return d;
+        d = JSON.parse(localStorage.getItem(KEY));
       } catch(e) {}
       
       // Try migrating from old versions
-      const oldKeys = ['ericka_75hard_v3', 'ericka_75hard_v2', 'ericka_75hard'];
-      for (const k of oldKeys) {
-        try {
-          const old = JSON.parse(localStorage.getItem(k));
-          if (old && old.completedDays) {
-            console.log('Migrated from', k);
-            return old;
-          }
-        } catch(e) {}
+      if (!d || !d.completedDays) {
+        const oldKeys = ['ericka_75hard_v3', 'ericka_75hard_v2', 'ericka_75hard'];
+        for (const k of oldKeys) {
+          try {
+            const old = JSON.parse(localStorage.getItem(k));
+            if (old && old.completedDays) {
+              console.log('Migrated from', k);
+              d = old;
+              break;
+            }
+          } catch(e) {}
+        }
       }
       
-      return { completedDays: [], todayTasks: {}, waterBottles: {}, weights: [] };
+      if (!d) d = { completedDays: [], todayTasks: {}, waterBottles: {}, weights: [] };
+      if (!d.completedDays) d.completedDays = [];
+      if (!d.weights) d.weights = [];
+      
+      // ONE-TIME FIX: Ensure days 1-8 are marked complete (Feb 24 - Mar 3, 2026)
+      // Ericka confirmed 9-day streak as of Mar 4
+      if (!d.migrated_v4_streak) {
+        const confirmedDates = [
+          'Mon Feb 24 2026', // Day 1
+          'Tue Feb 25 2026', // Day 2
+          'Wed Feb 26 2026', // Day 3
+          'Thu Feb 27 2026', // Day 4
+          'Fri Feb 28 2026', // Day 5
+          'Sat Mar 01 2026', // Day 6
+          'Sun Mar 02 2026', // Day 7
+          'Mon Mar 03 2026', // Day 8
+        ];
+        confirmedDates.forEach(dateStr => {
+          if (!d.completedDays.includes(dateStr)) {
+            d.completedDays.push(dateStr);
+          }
+        });
+        d.migrated_v4_streak = true;
+        save(d);
+        console.log('Fixed streak - days 1-8 marked complete');
+      }
+      
+      return d;
     }
     
     function save(d) {
