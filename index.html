@@ -3,196 +3,68 @@
 <head>
   <link rel="manifest" href="/manifest.json">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#9E1B32">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%239E1B32' width='100' height='100' rx='20'/><text x='50' y='65' font-size='40' text-anchor='middle' fill='%23FFD700' font-family='Arial' font-weight='bold'>75</text></svg>">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Ericka's 75 Hard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-primary: #1a1a2e;
-      --bg-secondary: #16213e;
-      --bg-accent: #0f3460;
+      --bg: #1a1a2e;
+      --card: rgba(255,255,255,0.08);
       --accent: #9E1B32;
-      --accent-light: #FFD700;
-      --text: #ffffff;
-      --text-muted: rgba(255,255,255,0.7);
-      --card-bg: rgba(255,255,255,0.08);
+      --gold: #FFD700;
+      --text: #fff;
+      --muted: rgba(255,255,255,0.6);
       --border: rgba(255,255,255,0.1);
-    }
-    .light-mode {
-      --bg-primary: #f5f7fa;
-      --bg-secondary: #e8ecf1;
-      --bg-accent: #dde4ec;
-      --accent: #9E1B32;
-      --accent-light: #FFD700;
-      --text: #1a1a2e;
-      --text-muted: rgba(26,26,46,0.7);
-      --card-bg: rgba(255,255,255,0.9);
-      --border: rgba(0,0,0,0.1);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Inter', -apple-system, sans-serif;
-      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-accent) 100%);
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
       min-height: 100vh;
       color: var(--text);
       padding: 20px;
       padding-bottom: 100px;
-      transition: all 0.3s ease;
     }
-    .container { max-width: 500px; margin: 0 auto; }
-    
-    /* Theme Toggle */
-    .theme-toggle {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      background: var(--card-bg);
-      border: none;
-      border-radius: 50%;
-      width: 45px;
-      height: 45px;
-      font-size: 1.3em;
-      cursor: pointer;
-      z-index: 100;
-      backdrop-filter: blur(10px);
-    }
-    
-    .user-badge {
-      text-align: center;
-      margin-bottom: 15px;
-      font-size: 0.9em;
-      opacity: 0.8;
-    }
-    .user-badge span { 
-      background: rgba(158, 27, 50, 0.3);
-      padding: 5px 15px;
-      border-radius: 20px;
-    }
-    
-    /* Quote Banner */
-    .quote-banner {
-      background: linear-gradient(135deg, var(--accent) 0%, #CBA135 100%);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 20px;
-      text-align: center;
-      box-shadow: 0 10px 40px rgba(158, 27, 50, 0.3);
-      color: white;
-    }
-    .quote-text { font-size: 1.1em; font-style: italic; line-height: 1.5; }
-    .quote-author { margin-top: 10px; font-size: 0.9em; opacity: 0.9; }
+    .container { max-width: 420px; margin: 0 auto; }
     
     /* Day Counter */
-    .day-counter {
-      background: var(--card-bg);
+    .day-box {
+      background: var(--card);
       border-radius: 20px;
       padding: 30px;
       text-align: center;
       margin-bottom: 20px;
-      backdrop-filter: blur(10px);
-      position: relative;
-      overflow: hidden;
     }
-    .day-label { font-size: 1.2em; opacity: 0.8; text-transform: uppercase; letter-spacing: 2px; }
-    .day-number { font-size: 5em; font-weight: 900; color: var(--accent); line-height: 1; }
-    .day-of { font-size: 1.5em; opacity: 0.7; }
-    .progress-bar {
-      background: var(--border);
-      border-radius: 10px;
-      height: 12px;
-      margin-top: 20px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      background: linear-gradient(90deg, var(--accent), #CBA135);
-      height: 100%;
-      border-radius: 10px;
-      transition: width 0.5s ease;
-    }
-    .progress-text { margin-top: 8px; font-size: 0.9em; opacity: 0.7; }
+    .day-label { font-size: 0.9em; opacity: 0.7; text-transform: uppercase; letter-spacing: 2px; }
+    .day-num { font-size: 5em; font-weight: 900; color: var(--accent); line-height: 1; }
+    .day-of { font-size: 1.3em; opacity: 0.6; }
+    .progress-bar { background: var(--border); border-radius: 10px; height: 10px; margin-top: 20px; overflow: hidden; }
+    .progress-fill { background: linear-gradient(90deg, var(--accent), var(--gold)); height: 100%; border-radius: 10px; transition: width 0.3s; }
+    .progress-text { margin-top: 8px; font-size: 0.85em; opacity: 0.6; }
     
-    /* Milestone Celebration */
-    .milestone-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: gold;
-      color: #333;
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 0.8em;
-      animation: pulse 2s infinite;
+    /* Stats */
+    .stats { display: flex; gap: 10px; margin-bottom: 20px; }
+    .stat {
+      flex: 1;
+      background: var(--card);
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
     }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-    }
-    .confetti {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1000;
-    }
+    .stat-val { font-size: 1.8em; font-weight: 700; color: var(--gold); }
+    .stat-label { font-size: 0.75em; opacity: 0.6; margin-top: 3px; }
     
-    /* Sections */
+    /* Section */
     .section {
-      background: var(--card-bg);
+      background: var(--card);
       border-radius: 16px;
       padding: 20px;
       margin-bottom: 15px;
-      backdrop-filter: blur(10px);
     }
-    .section-title {
-      font-size: 1.1em;
-      font-weight: 700;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .section-icon { font-size: 1.3em; }
-    
-    /* Partner Section */
-    .partner-card {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      padding: 15px;
-      background: rgba(0,200,150,0.1);
-      border-radius: 12px;
-      border: 1px solid rgba(0,200,150,0.3);
-    }
-    .partner-avatar {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #00c896, #00d9a5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5em;
-    }
-    .partner-info { flex: 1; }
-    .partner-name { font-weight: 700; font-size: 1.1em; }
-    .partner-stats { font-size: 0.9em; opacity: 0.8; margin-top: 3px; }
-    .partner-streak { 
-      background: var(--accent);
-      color: white;
-      padding: 8px 15px;
-      border-radius: 20px;
-      font-weight: 700;
-    }
+    .section-title { font-size: 1em; font-weight: 600; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
     
     /* Tasks */
     .task {
@@ -201,939 +73,351 @@
       padding: 12px 0;
       border-bottom: 1px solid var(--border);
     }
-    .task:last-child { border-bottom: none; }
-    .task input[type="checkbox"] {
-      width: 24px;
-      height: 24px;
-      margin-right: 15px;
-      accent-color: var(--accent);
-      cursor: pointer;
-    }
-    .task-label { flex: 1; font-size: 1em; }
-    .task.completed .task-label {
-      text-decoration: line-through;
-      opacity: 0.5;
-    }
+    .task:last-of-type { border-bottom: none; }
+    .task input[type="checkbox"] { width: 22px; height: 22px; margin-right: 12px; accent-color: var(--accent); }
+    .task.done label { text-decoration: line-through; opacity: 0.5; }
     
-    /* Water Tracker */
-    .water-tracker { padding: 15px 0; border-bottom: 1px solid var(--border); }
-    .water-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .water-count { font-size: 0.9em; color: #4fc3f7; font-weight: 600; }
-    .water-bottles { display: flex; gap: 8px; justify-content: center; }
+    /* Water */
+    .water-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .water-count { font-size: 0.9em; color: #4fc3f7; }
+    .bottles { display: flex; gap: 8px; justify-content: center; }
     .bottle {
-      width: 50px;
-      height: 70px;
+      width: 45px; height: 60px;
       background: var(--border);
       border-radius: 8px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2em;
-      transition: all 0.3s ease;
-      border: 2px solid transparent;
+      font-size: 1.8em;
       position: relative;
       overflow: hidden;
+      border: 2px solid transparent;
     }
     .bottle::before {
       content: '';
       position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 0; left: 0; right: 0;
       height: 0%;
       background: linear-gradient(180deg, #4fc3f7, #0288d1);
-      transition: height 0.3s ease;
+      transition: height 0.2s;
       z-index: 0;
     }
     .bottle.filled::before { height: 100%; }
-    .bottle span { position: relative; z-index: 1; }
-    .bottle:hover { transform: scale(1.05); border-color: #4fc3f7; }
     .bottle.filled { border-color: #4fc3f7; }
-    .water-complete { text-align: center; margin-top: 10px; font-size: 0.9em; color: #4fc3f7; opacity: 0; transition: opacity 0.3s; }
-    .water-complete.show { opacity: 1; }
-    
-    /* Book Tracker */
-    .book-tracker { margin-top: 15px; }
-    .book-input-row { display: flex; gap: 10px; margin-bottom: 10px; }
-    .book-input-row input {
-      flex: 1;
-      padding: 10px 12px;
-      border: 2px solid var(--border);
-      border-radius: 8px;
-      background: var(--card-bg);
-      color: var(--text);
-      font-size: 0.95em;
-      outline: none;
-    }
-    .book-input-row input:focus { border-color: var(--accent); }
-    .book-input-row input::placeholder { color: var(--text-muted); }
-    .book-input-row button {
-      padding: 10px 15px;
-      background: var(--accent);
-      border: none;
-      border-radius: 8px;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .book-list { margin-top: 10px; }
-    .book-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.9em;
-    }
-    .book-title { flex: 1; }
-    .book-pages { color: var(--accent); font-weight: 600; }
-    
-    /* Measurements */
-    .measurement-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-    .measurement-item {
-      background: var(--border);
-      border-radius: 10px;
-      padding: 12px;
-    }
-    .measurement-label { font-size: 0.8em; opacity: 0.7; margin-bottom: 5px; }
-    .measurement-value { font-size: 1.3em; font-weight: 700; color: var(--accent); }
-    .measurement-input {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: var(--card-bg);
-      color: var(--text);
-      font-size: 1em;
-      margin-top: 5px;
-    }
-    
-    /* Weekly Reflection */
-    .reflection-prompt {
-      background: var(--border);
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-      font-style: italic;
-    }
-    .reflection-textarea {
-      width: 100%;
-      min-height: 120px;
-      padding: 15px;
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      background: var(--card-bg);
-      color: var(--text);
-      font-size: 1em;
-      resize: vertical;
-      outline: none;
-    }
-    .reflection-textarea:focus { border-color: var(--accent); }
-    .reflection-save {
-      margin-top: 10px;
-      padding: 12px 20px;
-      background: var(--accent);
-      border: none;
-      border-radius: 8px;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-    }
-    .past-reflections { margin-top: 15px; }
-    .past-reflection {
-      background: var(--border);
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-    .past-reflection-week { font-weight: 700; color: var(--accent); margin-bottom: 5px; }
-    .past-reflection-text { font-size: 0.9em; opacity: 0.9; }
-    
-    /* Weight & Inputs */
-    .input-group {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-    .input-group input {
-      flex: 1;
-      padding: 12px 15px;
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      background: var(--card-bg);
-      color: var(--text);
-      font-size: 1.1em;
-      outline: none;
-    }
-    .input-group input:focus { border-color: var(--accent); }
-    .input-group input::placeholder { color: var(--text-muted); }
-    .input-group button {
-      padding: 12px 20px;
-      background: var(--accent);
-      border: none;
-      border-radius: 10px;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .history { max-height: 150px; overflow-y: auto; }
-    .history-entry {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.95em;
-    }
-    .history-date { opacity: 0.6; }
-    .history-value { font-weight: 600; color: #CBA135; }
-    
-    /* Stats */
-    .stats-row { display: flex; gap: 10px; margin-bottom: 15px; }
-    .stat-box {
-      flex: 1;
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 15px;
-      text-align: center;
-    }
-    .stat-value { font-size: 1.8em; font-weight: 700; color: var(--accent); }
-    .stat-label { font-size: 0.8em; opacity: 0.7; margin-top: 5px; }
+    .bottle span { position: relative; z-index: 1; }
     
     /* Complete Button */
     .complete-btn {
       width: 100%;
-      padding: 18px;
-      background: linear-gradient(135deg, var(--accent), #CBA135);
+      padding: 16px;
+      background: linear-gradient(135deg, var(--accent), #c92a4a);
       border: none;
       border-radius: 12px;
       color: white;
-      font-size: 1.2em;
-      font-weight: 700;
+      font-size: 1.1em;
+      font-weight: 600;
       cursor: pointer;
-      margin-top: 10px;
-      box-shadow: 0 10px 30px rgba(158, 27, 50, 0.3);
-      transition: transform 0.2s;
+      margin-top: 15px;
     }
-    .complete-btn:hover { transform: translateY(-2px); }
-    .complete-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-    .complete-btn.completed { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+    .complete-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .complete-btn.done { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+    
+    /* Weight */
+    .weight-input {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .weight-input input {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+      color: var(--text);
+      font-size: 1.1em;
+    }
+    .weight-input input:focus { outline: none; border-color: var(--accent); }
+    .weight-input button {
+      padding: 12px 20px;
+      background: var(--accent);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .weight-list { max-height: 200px; overflow-y: auto; }
+    .weight-entry {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .weight-date { opacity: 0.5; font-size: 0.9em; }
+    .weight-val { font-weight: 600; color: var(--gold); }
+    .weight-delta { font-size: 0.85em; margin-left: 8px; }
+    .weight-delta.down { color: #2ecc71; }
+    .weight-delta.up { color: #e74c3c; }
     
     /* Calendar */
-    .calendar { display: grid; grid-template-columns: repeat(15, 1fr); gap: 4px; margin-top: 15px; }
-    .calendar-day {
+    .calendar { display: grid; grid-template-columns: repeat(15, 1fr); gap: 3px; margin-top: 15px; }
+    .cal-day {
       aspect-ratio: 1;
       border-radius: 4px;
       background: var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.65em;
+      font-size: 0.6em;
       font-weight: 600;
     }
-    .calendar-day.complete { background: #2ecc71; color: white; }
-    .calendar-day.today { border: 2px solid var(--accent); }
-    .calendar-day.future { opacity: 0.3; }
-    .calendar-day.milestone { background: gold; color: #333; }
-    
-    /* Tabs */
-    .tabs { display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap; }
-    .tab {
-      flex: 1;
-      min-width: 80px;
-      padding: 10px;
-      background: var(--border);
-      border: none;
-      border-radius: 8px;
-      color: var(--text);
-      font-size: 0.85em;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .tab.active { background: var(--accent); color: white; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
+    .cal-day.done { background: #2ecc71; }
+    .cal-day.today { border: 2px solid var(--accent); }
+    .cal-day.future { opacity: 0.3; }
   </style>
 </head>
 <body>
-  <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" style="right: 70px;">🌙</button>
-  <button class="theme-toggle" onclick="location.reload(true)" title="Force Refresh" style="right: 15px;">🔄</button>
-  
   <div class="container">
-    <div class="user-badge"><span>💪 Ericka's Journey</span></div>
-    
-    <div class="quote-banner">
-      <p class="quote-text" id="quote"></p>
-      <p class="quote-author" id="author"></p>
-    </div>
-    
-    <div class="day-counter" id="dayCounter">
-      <div class="milestone-badge" id="milestoneBadge" style="display:none">🏆 MILESTONE!</div>
-      <p class="day-label">Current Day</p>
-      <p class="day-number" id="dayNumber">2</p>
+    <div class="day-box">
+      <p class="day-label">Day</p>
+      <p class="day-num" id="dayNum">1</p>
       <p class="day-of">of 75</p>
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
-      <p class="progress-text" id="progressText"></p>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <p class="progress-text" id="progressText">0% complete</p>
     </div>
     
-    <!-- Partner Accountability -->
-    <div class="section">
-      <div class="section-title"><span class="section-icon">👯‍♀️</span> Partner Check-In</div>
-      <div class="partner-card" id="partnerCard">
-        <div class="partner-avatar">C</div>
-        <div class="partner-info">
-          <div class="partner-name">Courtney</div>
-          <div class="partner-stats" id="partnerStats">Loading...</div>
-        </div>
-        <div class="partner-streak" id="partnerStreak">🔥 0</div>
-      </div>
-    </div>
-    
-    <div class="stats-row">
-      <div class="stat-box">
-        <div class="stat-value" id="daysComplete">1</div>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-val" id="daysComplete">0</div>
         <div class="stat-label">Days Done</div>
       </div>
-      <div class="stat-box">
-        <div class="stat-value" id="daysLeft">74</div>
+      <div class="stat">
+        <div class="stat-val" id="daysLeft">75</div>
         <div class="stat-label">Days Left</div>
       </div>
-      <div class="stat-box">
-        <div class="stat-value" id="streak">1</div>
+      <div class="stat">
+        <div class="stat-val" id="streak">0</div>
         <div class="stat-label">🔥 Streak</div>
       </div>
     </div>
     
     <div class="section">
-      <div class="section-title"><span class="section-icon">✅</span> Today's Tasks</div>
+      <div class="section-title">✅ Today's Tasks</div>
       
-      <div class="task"><input type="checkbox" id="diet"><label class="task-label" for="diet">Follow diet (no cheat meals, no alcohol)</label></div>
-      <div class="task"><input type="checkbox" id="workout1"><label class="task-label" for="workout1">Workout #1 (45 min)</label></div>
-      <div class="task"><input type="checkbox" id="workout2"><label class="task-label" for="workout2">Workout #2 - Outdoor (45 min)</label></div>
+      <div class="task"><input type="checkbox" id="diet"><label for="diet">Follow diet (no cheats, no alcohol)</label></div>
+      <div class="task"><input type="checkbox" id="workout1"><label for="workout1">Workout #1 (45 min)</label></div>
+      <div class="task"><input type="checkbox" id="workout2"><label for="workout2">Workout #2 - Outdoor (45 min)</label></div>
       
-      <div class="water-tracker">
-        <div class="water-label">
+      <div class="task" style="flex-direction:column;align-items:stretch;">
+        <div class="water-row">
           <span>💧 Water (5 bottles = 1 gallon)</span>
           <span class="water-count" id="waterCount">0/5</span>
         </div>
-        <div class="water-bottles">
+        <div class="bottles">
           <div class="bottle" onclick="toggleBottle(1)"><span>🍶</span></div>
           <div class="bottle" onclick="toggleBottle(2)"><span>🍶</span></div>
           <div class="bottle" onclick="toggleBottle(3)"><span>🍶</span></div>
           <div class="bottle" onclick="toggleBottle(4)"><span>🍶</span></div>
           <div class="bottle" onclick="toggleBottle(5)"><span>🍶</span></div>
         </div>
-        <div class="water-complete" id="waterComplete">🎉 1 Gallon Complete!</div>
       </div>
       
-      <div class="task"><input type="checkbox" id="reading"><label class="task-label" for="reading">Read 10 pages (non-fiction)</label></div>
-      <div class="task"><input type="checkbox" id="photo"><label class="task-label" for="photo">Take progress photo</label></div>
+      <div class="task"><input type="checkbox" id="reading"><label for="reading">Read 10 pages</label></div>
+      <div class="task"><input type="checkbox" id="photo"><label for="photo">Progress photo</label></div>
       
       <button class="complete-btn" id="completeBtn" onclick="completeDay()">Complete Day ✓</button>
     </div>
     
-    <!-- Book Tracker -->
     <div class="section">
-      <div class="section-title"><span class="section-icon">📚</span> Book Tracker</div>
-      <div class="book-input-row">
-        <input type="text" id="bookTitle" placeholder="Book title">
-        <input type="number" id="bookPages" placeholder="Pages" style="max-width:80px">
-        <button onclick="addBook()">+</button>
+      <div class="section-title">⚖️ Weight Log</div>
+      <div class="weight-input">
+        <input type="number" id="weightInput" placeholder="Weight (lbs)" step="0.1">
+        <button onclick="logWeight()">Log</button>
       </div>
-      <div class="book-list" id="bookList"></div>
-      <div style="margin-top:10px;text-align:center;opacity:0.7">
-        Total pages read: <strong id="totalPages">0</strong>
-      </div>
-    </div>
-    
-    <!-- Body Measurements -->
-    <div class="section">
-      <div class="section-title"><span class="section-icon">📏</span> Body Measurements</div>
-      <div class="tabs">
-        <button class="tab active" onclick="showMeasureTab('current')">Current</button>
-        <button class="tab" onclick="showMeasureTab('log')">Log New</button>
-        <button class="tab" onclick="showMeasureTab('history')">History</button>
-      </div>
-      <div id="measureCurrent" class="tab-content active">
-        <div class="measurement-grid" id="measurementGrid"></div>
-      </div>
-      <div id="measureLog" class="tab-content">
-        <div class="measurement-grid">
-          <div class="measurement-item">
-            <div class="measurement-label">Weight (lbs)</div>
-            <input class="measurement-input" type="number" id="mWeight" step="0.1">
-          </div>
-          <div class="measurement-item">
-            <div class="measurement-label">Chest (in)</div>
-            <input class="measurement-input" type="number" id="mChest" step="0.1">
-          </div>
-          <div class="measurement-item">
-            <div class="measurement-label">Waist (in)</div>
-            <input class="measurement-input" type="number" id="mWaist" step="0.1">
-          </div>
-          <div class="measurement-item">
-            <div class="measurement-label">Hips (in)</div>
-            <input class="measurement-input" type="number" id="mHips" step="0.1">
-          </div>
-          <div class="measurement-item">
-            <div class="measurement-label">Arms (in)</div>
-            <input class="measurement-input" type="number" id="mArms" step="0.1">
-          </div>
-          <div class="measurement-item">
-            <div class="measurement-label">Thighs (in)</div>
-            <input class="measurement-input" type="number" id="mThighs" step="0.1">
-          </div>
-        </div>
-        <button class="complete-btn" onclick="saveMeasurements()" style="margin-top:0">Save Measurements</button>
-      </div>
-      <div id="measureHistory" class="tab-content">
-        <div class="history" id="measurementHistory"></div>
-      </div>
-    </div>
-    
-    <!-- Weekly Reflection -->
-    <div class="section" id="reflectionSection">
-      <div class="section-title"><span class="section-icon">📝</span> Weekly Reflection</div>
-      <div class="reflection-prompt" id="reflectionPrompt"></div>
-      <textarea class="reflection-textarea" id="reflectionText" placeholder="Write your thoughts..."></textarea>
-      <button class="reflection-save" onclick="saveReflection()">Save Reflection</button>
-      <div class="past-reflections" id="pastReflections"></div>
+      <div class="weight-list" id="weightList"></div>
     </div>
     
     <div class="section">
-      <div class="section-title"><span class="section-icon">📅</span> 75 Day Journey</div>
+      <div class="section-title">📅 Progress</div>
       <div class="calendar" id="calendar"></div>
     </div>
   </div>
-  
-  <canvas class="confetti" id="confetti"></canvas>
 
   <script>
-    // Register Service Worker for PWA persistence
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').then(() => console.log('SW registered'))
-        .catch(e => console.error('SW failed:', e));
-    }
-    
-    const USER = 'ericka';
-    const PARTNER = 'courtney';
-    const START_DATE = new Date('2026-02-23');
-    const STORAGE_KEY = 'ericka_75hard_v3';
+    const START = new Date('2026-02-24'); // Day 1 = Feb 24 (adjusted for Ericka's actual start)
+    const KEY = 'ericka75hard_v4';
     const TASKS = ['diet', 'workout1', 'workout2', 'water', 'reading', 'photo'];
-    const MILESTONES = [25, 50, 75];
     
-    // IndexedDB backup for better persistence
-    const DB_NAME = 'Ericka75HardDB';
-    const DB_STORE = 'appData';
-    let db = null;
-    
-    function openDB() {
-      return new Promise((resolve, reject) => {
-        const req = indexedDB.open(DB_NAME, 1);
-        req.onerror = () => reject(req.error);
-        req.onsuccess = () => { db = req.result; resolve(db); };
-        req.onupgradeneeded = (e) => {
-          const d = e.target.result;
-          if (!d.objectStoreNames.contains(DB_STORE)) {
-            d.createObjectStore(DB_STORE);
-          }
-        };
-      });
+    function today() {
+      const now = new Date();
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate());
     }
     
-    async function saveToIDB(data) {
-      if (!db) await openDB();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction(DB_STORE, 'readwrite');
-        tx.objectStore(DB_STORE).put(data, 'main');
-        tx.oncomplete = () => resolve();
-        tx.onerror = () => reject(tx.error);
-      });
+    function todayKey() { return today().toDateString(); }
+    
+    function getDay() {
+      const t = today();
+      const s = new Date(START.getFullYear(), START.getMonth(), START.getDate());
+      return Math.max(1, Math.min(75, Math.floor((t - s) / 86400000) + 1));
     }
     
-    async function loadFromIDB() {
-      if (!db) await openDB();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction(DB_STORE, 'readonly');
-        const req = tx.objectStore(DB_STORE).get('main');
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
-      });
-    }
-    
-    const WEEKLY_PROMPTS = [
-      "Week 1: Why did you start 75 Hard? What do you hope to achieve?",
-      "Week 2: What's been the hardest part so far? How are you pushing through?",
-      "Week 3: What positive changes have you noticed in yourself?",
-      "Week 4: How has your relationship with discipline changed?",
-      "Week 5: What have you learned about yourself this month?",
-      "Week 6: How has your mindset shifted since day 1?",
-      "Week 7: What will you carry with you after 75 Hard ends?",
-      "Week 8: What are you most proud of? How will you maintain these habits?",
-      "Week 9: Reflect on your transformation - mind, body, and spirit.",
-      "Week 10: You're almost there! What does finishing mean to you?",
-      "Week 11: Final stretch - what legacy does this challenge leave?"
-    ];
-    
-    const quotes = [
-      { text: "The only bad workout is the one that didn't happen.", author: "Unknown" },
-      { text: "Discipline is choosing between what you want now and what you want most.", author: "Abraham Lincoln" },
-      { text: "The body achieves what the mind believes.", author: "Napoleon Hill" },
-      { text: "75 Hard isn't about being perfect. It's about not quitting.", author: "Andy Frisella" },
-      { text: "Mental toughness is doing the right thing regardless of how you feel.", author: "Andy Frisella" },
-      { text: "Suffer the pain of discipline or suffer the pain of regret.", author: "Jim Rohn" },
-      { text: "You got this, Ericka! 💪", author: "Your App" }
-    ];
-    
-    function getCurrentDay() {
-      const today = new Date(); today.setHours(0,0,0,0);
-      const start = new Date(START_DATE); start.setHours(0,0,0,0);
-      return Math.max(1, Math.min(75, Math.floor((today - start) / 86400000) + 1));
-    }
-    
-    function getWeek() { return Math.ceil(getCurrentDay() / 7); }
-    
-    function getDefaultData() {
-      return {
-        completedDays: [], todayTasks: {}, waterBottles: {},
-        books: [], measurements: [], reflections: {}, theme: 'dark'
-      };
-    }
-    
-    function loadData() {
-      const DAY1 = new Date('2026-02-23').toDateString();
-      
-      // Try localStorage first
-      let data = null;
+    function load() {
       try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) data = JSON.parse(stored);
-      } catch(e) { console.error('localStorage read error:', e); }
-      
-      // Migrate from old storage keys if no data
-      if (!data) {
-        const oldKeys = ['ericka_75hard_v2', 'ericka_75hard_v1', 'ericka_75hard'];
-        for (const oldKey of oldKeys) {
-          try {
-            const oldData = localStorage.getItem(oldKey);
-            if (oldData) {
-              data = JSON.parse(oldData);
-              console.log('Migrated data from', oldKey);
-              break;
-            }
-          } catch(e) {}
-        }
-      }
-      
-      if (!data) data = getDefaultData();
-      
-      // Ensure completedDays is an array
-      if (!Array.isArray(data.completedDays)) data.completedDays = [];
-      if (!data.measurements) data.measurements = [];
-      if (!data.books) data.books = [];
-      if (!data.todayTasks) data.todayTasks = {};
-      if (!data.waterBottles) data.waterBottles = {};
-      
-      // Migration fixes - Updated 2026-03-03
-      // Ericka confirmed: Day 9 today, perfect 8-day streak (days 1-8 complete)
-      // DO NOT reset measurements or weight data
-      let needsSave = false;
-      
-      // Ensure days 1-8 are marked complete (Feb 23 - Mar 2, 2026)
-      const confirmedDays = [
-        new Date('2026-02-23').toDateString(), // Day 1
-        new Date('2026-02-24').toDateString(), // Day 2
-        new Date('2026-02-25').toDateString(), // Day 3
-        new Date('2026-02-26').toDateString(), // Day 4
-        new Date('2026-02-27').toDateString(), // Day 5
-        new Date('2026-02-28').toDateString(), // Day 6
-        new Date('2026-03-01').toDateString(), // Day 7
-        new Date('2026-03-02').toDateString(), // Day 8
-      ];
-      
-      confirmedDays.forEach(d => {
-        if (!data.completedDays.includes(d)) {
-          data.completedDays.push(d);
-          needsSave = true;
-        }
-      });
-      
-      // Remove any incorrect/duplicate entries
-      const uniqueDays = [...new Set(data.completedDays)];
-      if (uniqueDays.length !== data.completedDays.length) {
-        data.completedDays = uniqueDays;
-        needsSave = true;
-      }
-      
-      if (needsSave) {
-        saveDataSync(data);
-      }
-      
-      return data;
-    }
-    
-    function saveDataSync(data) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        console.log('Saved to localStorage:', data.completedDays.length, 'days,', data.measurements.length, 'measurements');
-      } catch(e) { console.error('localStorage write error:', e); }
-    }
-    
-    function saveData(data) {
-      saveDataSync(data);
-      // Also save to IndexedDB as backup
-      saveToIDB(data).catch(e => console.error('IDB save error:', e));
-      syncToPartner(data);
-    }
-    
-    // Restore from IndexedDB if localStorage is empty
-    async function restoreFromBackup() {
-      const lsData = localStorage.getItem(STORAGE_KEY);
-      if (!lsData || lsData === 'null') {
-        try {
-          const idbData = await loadFromIDB();
-          if (idbData && idbData.completedDays && idbData.completedDays.length > 0) {
-            console.log('Restoring from IndexedDB backup');
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(idbData));
-            updateUI();
-          }
-        } catch(e) { console.error('IDB restore error:', e); }
-      }
-    }
-    
-    async function syncToPartner(data) {
-      try {
-        const stats = {
-          daysComplete: data.completedDays.length,
-          streak: calculateStreak(data),
-          currentDay: getCurrentDay()
-        };
-        await fetch('https://seven5hard-sync.onrender.com/sync', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ user: USER, stats })
-        });
+        const d = JSON.parse(localStorage.getItem(KEY));
+        if (d && d.completedDays) return d;
       } catch(e) {}
-    }
-    
-    async function fetchPartner() {
-      try {
-        const res = await fetch(`https://seven5hard-sync.onrender.com/partner?name=${PARTNER}`);
-        const stats = await res.json();
-        if (stats && stats.daysComplete !== undefined) {
-          document.getElementById('partnerStats').textContent = `Day ${stats.currentDay || getCurrentDay()} • ${stats.daysComplete} days done`;
-          document.getElementById('partnerStreak').textContent = `🔥 ${stats.streak || 0}`;
-        } else {
-          document.getElementById('partnerStats').textContent = 'Not synced yet';
-          document.getElementById('partnerStreak').textContent = '🔥 0';
-        }
-      } catch(e) {
-        document.getElementById('partnerStats').textContent = 'Offline';
-        document.getElementById('partnerStreak').textContent = '—';
-      }
-    }
-    
-    function toggleTheme() {
-      const data = loadData();
-      data.theme = data.theme === 'dark' ? 'light' : 'dark';
-      saveData(data);
-      applyTheme(data.theme);
-    }
-    
-    function applyTheme(theme) {
-      document.body.classList.toggle('light-mode', theme === 'light');
-      document.getElementById('themeBtn').textContent = theme === 'dark' ? '🌙' : '☀️';
-    }
-    
-    function displayQuote() {
-      const q = quotes[Math.floor(Math.random() * quotes.length)];
-      document.getElementById('quote').textContent = `"${q.text}"`;
-      document.getElementById('author').textContent = `— ${q.author}`;
-    }
-    
-    function toggleBottle(num) {
-      const data = loadData();
-      const key = new Date().toDateString();
-      if (!data.waterBottles[key]) data.waterBottles[key] = 0;
-      data.waterBottles[key] = num <= data.waterBottles[key] ? num - 1 : num;
-      if (!data.todayTasks[key]) data.todayTasks[key] = {};
-      data.todayTasks[key].water = data.waterBottles[key] >= 5;
-      saveData(data);
-      updateUI();
-    }
-    
-    function addBook() {
-      const title = document.getElementById('bookTitle').value.trim();
-      const pages = parseInt(document.getElementById('bookPages').value) || 0;
-      if (!title || !pages) return;
-      const data = loadData();
-      data.books.push({ title, pages, date: new Date().toISOString() });
-      saveData(data);
-      document.getElementById('bookTitle').value = '';
-      document.getElementById('bookPages').value = '';
-      updateUI();
-    }
-    
-    function showMeasureTab(tab) {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      event.target.classList.add('active');
-      document.getElementById('measure' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
-    }
-    
-    function saveMeasurements() {
-      const data = loadData();
-      const m = {
-        date: new Date().toISOString(),
-        weight: parseFloat(document.getElementById('mWeight').value) || null,
-        chest: parseFloat(document.getElementById('mChest').value) || null,
-        waist: parseFloat(document.getElementById('mWaist').value) || null,
-        hips: parseFloat(document.getElementById('mHips').value) || null,
-        arms: parseFloat(document.getElementById('mArms').value) || null,
-        thighs: parseFloat(document.getElementById('mThighs').value) || null
-      };
-      data.measurements.push(m);
-      saveData(data);
-      ['mWeight','mChest','mWaist','mHips','mArms','mThighs'].forEach(id => document.getElementById(id).value = '');
-      updateUI();
-      alert('Measurements saved! 💪');
-    }
-    
-    function saveReflection() {
-      const data = loadData();
-      const week = getWeek();
-      const text = document.getElementById('reflectionText').value.trim();
-      if (!text) return;
-      data.reflections[week] = { text, date: new Date().toISOString() };
-      saveData(data);
-      document.getElementById('reflectionText').value = '';
-      updateUI();
-      alert('Reflection saved! 📝');
-    }
-    
-    function calculateStreak(data) {
-      // Count consecutive completed days ending at the most recent completed day
-      if (!data.completedDays || data.completedDays.length === 0) return 0;
       
-      // Sort completed days by date
-      const sortedDays = data.completedDays
-        .map(d => new Date(d))
-        .sort((a, b) => b - a); // Most recent first
-      
-      let streak = 1;
-      for (let i = 0; i < sortedDays.length - 1; i++) {
-        const diff = (sortedDays[i] - sortedDays[i + 1]) / 86400000; // Days between
-        if (Math.abs(diff - 1) < 0.01) { // Consecutive (within 1 day)
-          streak++;
-        } else {
-          break; // Gap found
-        }
-      }
-      
-      // Only count streak if it includes today or yesterday
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const mostRecent = new Date(sortedDays[0]);
-      mostRecent.setHours(0, 0, 0, 0);
-      const daysSinceLast = Math.floor((today - mostRecent) / 86400000);
-      
-      if (daysSinceLast > 1) {
-        return 0; // Streak broken - more than 1 day gap
-      }
-      
-      return streak;
-    }
-    
-    function checkMilestone(day) {
-      if (MILESTONES.includes(day)) {
-        document.getElementById('milestoneBadge').style.display = 'block';
-        launchConfetti();
-      }
-    }
-    
-    function launchConfetti() {
-      const canvas = document.getElementById('confetti');
-      const ctx = canvas.getContext('2d');
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      const particles = [];
-      for (let i = 0; i < 150; i++) {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height - canvas.height,
-          r: Math.random() * 6 + 4,
-          color: ['#9E1B32','#FFD700','#ffd700','#00c896','#4fc3f7'][Math.floor(Math.random()*5)],
-          vy: Math.random() * 3 + 2,
-          vx: Math.random() * 2 - 1
-        });
-      }
-      function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        let active = false;
-        particles.forEach(p => {
-          if (p.y < canvas.height) {
-            active = true;
-            p.y += p.vy;
-            p.x += p.vx;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = p.color;
-            ctx.fill();
+      // Try migrating from old versions
+      const oldKeys = ['ericka_75hard_v3', 'ericka_75hard_v2', 'ericka_75hard'];
+      for (const k of oldKeys) {
+        try {
+          const old = JSON.parse(localStorage.getItem(k));
+          if (old && old.completedDays) {
+            console.log('Migrated from', k);
+            return old;
           }
-        });
-        if (active) requestAnimationFrame(animate);
+        } catch(e) {}
       }
-      animate();
+      
+      return { completedDays: [], todayTasks: {}, waterBottles: {}, weights: [] };
     }
     
-    function updateUI() {
-      const data = loadData();
-      const day = getCurrentDay();
-      const todayKey = new Date().toDateString();
-      
-      applyTheme(data.theme || 'dark');
+    function save(d) {
+      localStorage.setItem(KEY, JSON.stringify(d));
+    }
+    
+    function streak(d) {
+      if (!d.completedDays.length) return 0;
+      const sorted = d.completedDays.map(x => new Date(x)).sort((a,b) => b-a);
+      let s = 1;
+      for (let i = 0; i < sorted.length - 1; i++) {
+        const diff = (sorted[i] - sorted[i+1]) / 86400000;
+        if (Math.abs(diff - 1) < 0.01) s++;
+        else break;
+      }
+      const daysSince = Math.floor((today() - sorted[0]) / 86400000);
+      return daysSince > 1 ? 0 : s;
+    }
+    
+    function toggleBottle(n) {
+      const d = load();
+      const k = todayKey();
+      if (!d.waterBottles[k]) d.waterBottles[k] = 0;
+      d.waterBottles[k] = n <= d.waterBottles[k] ? n - 1 : n;
+      if (!d.todayTasks[k]) d.todayTasks[k] = {};
+      d.todayTasks[k].water = d.waterBottles[k] >= 5;
+      save(d);
+      render();
+    }
+    
+    function logWeight() {
+      const w = parseFloat(document.getElementById('weightInput').value);
+      if (!w) return;
+      const d = load();
+      if (!d.weights) d.weights = [];
+      d.weights.push({ date: new Date().toISOString(), weight: w });
+      save(d);
+      document.getElementById('weightInput').value = '';
+      render();
+    }
+    
+    function completeDay() {
+      const d = load();
+      const k = todayKey();
+      if (!d.completedDays.includes(k)) {
+        d.completedDays.push(k);
+        save(d);
+        render();
+      }
+    }
+    
+    function render() {
+      const d = load();
+      const day = getDay();
+      const k = todayKey();
+      const tasks = d.todayTasks[k] || {};
+      const water = d.waterBottles[k] || 0;
       
       // Day counter
-      document.getElementById('dayNumber').textContent = day;
+      document.getElementById('dayNum').textContent = day;
       document.getElementById('progressFill').style.width = ((day/75)*100)+'%';
       document.getElementById('progressText').textContent = Math.round((day/75)*100)+'% complete';
       
       // Stats
-      document.getElementById('daysComplete').textContent = data.completedDays.length;
-      document.getElementById('daysLeft').textContent = 75 - day + 1;
-      document.getElementById('streak').textContent = calculateStreak(data);
+      document.getElementById('daysComplete').textContent = d.completedDays.length;
+      document.getElementById('daysLeft').textContent = Math.max(0, 75 - day + 1);
+      document.getElementById('streak').textContent = streak(d);
       
       // Tasks
-      const todayTasks = data.todayTasks[todayKey] || {};
-      TASKS.filter(t=>t!=='water').forEach(task => {
-        const cb = document.getElementById(task);
-        cb.checked = todayTasks[task] || false;
-        cb.parentElement.classList.toggle('completed', cb.checked);
+      TASKS.filter(t => t !== 'water').forEach(t => {
+        const cb = document.getElementById(t);
+        cb.checked = tasks[t] || false;
+        cb.parentElement.classList.toggle('done', cb.checked);
       });
       
       // Water
-      const wc = data.waterBottles[todayKey] || 0;
-      document.getElementById('waterCount').textContent = wc+'/5';
-      document.querySelectorAll('.bottle').forEach((b,i) => b.classList.toggle('filled', i < wc));
-      document.getElementById('waterComplete').classList.toggle('show', wc >= 5);
+      document.getElementById('waterCount').textContent = water + '/5';
+      document.querySelectorAll('.bottle').forEach((b, i) => b.classList.toggle('filled', i < water));
       
       // Complete button
-      const allDone = TASKS.every(t => t==='water' ? wc>=5 : document.getElementById(t).checked);
+      const allDone = TASKS.every(t => t === 'water' ? water >= 5 : document.getElementById(t).checked);
+      const done = d.completedDays.includes(k);
       const btn = document.getElementById('completeBtn');
-      const done = data.completedDays.includes(todayKey);
       btn.textContent = done ? `Day ${day} Complete! ✓` : `Complete Day ${day} ✓`;
       btn.disabled = !allDone || done;
-      btn.classList.toggle('completed', done);
+      btn.classList.toggle('done', done);
       
-      // Books
-      const bookList = document.getElementById('bookList');
-      const books = data.books || [];
-      bookList.innerHTML = books.length ? books.slice(-5).reverse().map(b => 
-        `<div class="book-item"><span class="book-title">📖 ${b.title}</span><span class="book-pages">${b.pages} pg</span></div>`
-      ).join('') : '<p style="opacity:0.5;text-align:center">No books logged yet</p>';
-      document.getElementById('totalPages').textContent = books.reduce((s,b) => s + b.pages, 0);
-      
-      // Measurements
-      const ms = data.measurements || [];
-      const latest = ms[ms.length - 1] || {};
-      const grid = document.getElementById('measurementGrid');
-      grid.innerHTML = ['weight','chest','waist','hips','arms','thighs'].map(k => 
-        `<div class="measurement-item"><div class="measurement-label">${k.charAt(0).toUpperCase()+k.slice(1)}</div><div class="measurement-value">${latest[k] || '—'}</div></div>`
-      ).join('');
-      
-      const mHistory = document.getElementById('measurementHistory');
-      mHistory.innerHTML = ms.length ? ms.slice(-5).reverse().map(m => 
-        `<div class="history-entry"><span class="history-date">${new Date(m.date).toLocaleDateString()}</span><span class="history-value">${m.weight||'—'}lbs</span></div>`
-      ).join('') : '<p style="opacity:0.5;text-align:center">No measurements yet</p>';
-      
-      // Reflections
-      const week = getWeek();
-      document.getElementById('reflectionPrompt').textContent = WEEKLY_PROMPTS[week-1] || WEEKLY_PROMPTS[0];
-      const refl = data.reflections || {};
-      if (refl[week]) document.getElementById('reflectionText').value = refl[week].text;
-      
-      const past = document.getElementById('pastReflections');
-      const pastWeeks = Object.keys(refl).filter(w => w < week).sort((a,b) => b-a).slice(0,3);
-      past.innerHTML = pastWeeks.map(w => 
-        `<div class="past-reflection"><div class="past-reflection-week">Week ${w}</div><div class="past-reflection-text">${refl[w].text.substring(0,150)}...</div></div>`
-      ).join('');
+      // Weights
+      const wl = document.getElementById('weightList');
+      const weights = (d.weights || []).slice(-10).reverse();
+      if (weights.length) {
+        wl.innerHTML = weights.map((w, i) => {
+          const prev = weights[i + 1];
+          let delta = '';
+          if (prev) {
+            const diff = w.weight - prev.weight;
+            if (diff !== 0) {
+              delta = `<span class="weight-delta ${diff < 0 ? 'down' : 'up'}">${diff > 0 ? '+' : ''}${diff.toFixed(1)}</span>`;
+            }
+          }
+          return `<div class="weight-entry"><span class="weight-date">${new Date(w.date).toLocaleDateString()}</span><span><span class="weight-val">${w.weight} lbs</span>${delta}</span></div>`;
+        }).join('');
+      } else {
+        wl.innerHTML = '<p style="opacity:0.5;text-align:center;padding:20px 0;">No weights logged yet</p>';
+      }
       
       // Calendar
       const cal = document.getElementById('calendar');
       cal.innerHTML = '';
       for (let i = 1; i <= 75; i++) {
-        const d = new Date(START_DATE); d.setDate(d.getDate() + i - 1);
-        const complete = data.completedDays.includes(d.toDateString());
+        const dt = new Date(START);
+        dt.setDate(dt.getDate() + i - 1);
+        const done = d.completedDays.includes(dt.toDateString());
         const isToday = i === day;
         const isFuture = i > day;
-        const isMilestone = MILESTONES.includes(i);
-        let cls = 'calendar-day';
-        if (complete) cls += ' complete';
+        let cls = 'cal-day';
+        if (done) cls += ' done';
         if (isToday) cls += ' today';
         if (isFuture) cls += ' future';
-        if (isMilestone && complete) cls += ' milestone';
         cal.innerHTML += `<div class="${cls}">${i}</div>`;
       }
-      
-      // Check milestone
-      if (data.completedDays.includes(todayKey) && MILESTONES.includes(day)) {
-        checkMilestone(day);
-      }
-      
-      fetchPartner();
     }
     
     // Task handlers
-    TASKS.filter(t=>t!=='water').forEach(task => {
-      document.getElementById(task).addEventListener('change', function() {
-        const data = loadData();
-        const key = new Date().toDateString();
-        if (!data.todayTasks[key]) data.todayTasks[key] = {};
-        data.todayTasks[key][task] = this.checked;
-        this.parentElement.classList.toggle('completed', this.checked);
-        saveData(data);
-        updateUI();
+    TASKS.filter(t => t !== 'water').forEach(t => {
+      document.getElementById(t).addEventListener('change', function() {
+        const d = load();
+        const k = todayKey();
+        if (!d.todayTasks[k]) d.todayTasks[k] = {};
+        d.todayTasks[k][t] = this.checked;
+        save(d);
+        render();
       });
     });
     
-    function completeDay() {
-      const data = loadData();
-      const key = new Date().toDateString();
-      if (!data.completedDays.includes(key)) {
-        data.completedDays.push(key);
-        saveData(data);
-        document.getElementById('completeBtn').textContent = '🎉 Amazing work, Ericka! 🎉';
-        if (MILESTONES.includes(getCurrentDay())) launchConfetti();
-        setTimeout(updateUI, 2000);
-      }
-    }
-    
-    // Initialize
-    (async function init() {
-      try {
-        await openDB();
-        await restoreFromBackup();
-      } catch(e) { console.error('Init error:', e); }
-      displayQuote();
-      updateUI();
-      
-      // Debug: log current state
-      const data = loadData();
-      console.log('Current state:', {
-        completedDays: data.completedDays,
-        measurements: data.measurements.length,
-        currentDay: getCurrentDay(),
-        streak: calculateStreak(data)
-      });
-    })();
+    render();
   </script>
 </body>
 </html>
