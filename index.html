@@ -30,6 +30,17 @@
     }
     .container { max-width: 420px; margin: 0 auto; }
     
+    /* Quote */
+    .quote-box {
+      background: linear-gradient(135deg, var(--accent), #c92a4a);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .quote-text { font-size: 1.05em; font-style: italic; line-height: 1.5; }
+    .quote-author { margin-top: 10px; font-size: 0.85em; opacity: 0.8; }
+    
     /* Day Counter */
     .day-box {
       background: var(--card);
@@ -180,6 +191,11 @@
 </head>
 <body>
   <div class="container">
+    <div class="quote-box" id="quoteBox">
+      <p class="quote-text" id="quoteText"></p>
+      <p class="quote-author" id="quoteAuthor"></p>
+    </div>
+    
     <div class="day-box">
       <p class="day-label">Day</p>
       <p class="day-num" id="dayNum">1</p>
@@ -231,15 +247,6 @@
     </div>
     
     <div class="section">
-      <div class="section-title">⚖️ Weight Log</div>
-      <div class="weight-input">
-        <input type="number" id="weightInput" placeholder="Weight (lbs)" step="0.1">
-        <button onclick="logWeight()">Log</button>
-      </div>
-      <div class="weight-list" id="weightList"></div>
-    </div>
-    
-    <div class="section">
       <div class="section-title">📅 Progress</div>
       <div class="calendar" id="calendar"></div>
     </div>
@@ -248,6 +255,26 @@
   <script>
     // Day 1 = Feb 23, 2026. Use noon to avoid timezone issues
     const START = new Date(2026, 1, 23, 12, 0, 0); // Month is 0-indexed, so 1 = February
+    
+    const QUOTES = [
+      { text: "The only bad workout is the one that didn't happen.", author: "Unknown" },
+      { text: "Discipline is choosing between what you want now and what you want most.", author: "Abraham Lincoln" },
+      { text: "The body achieves what the mind believes.", author: "Napoleon Hill" },
+      { text: "75 Hard isn't about being perfect. It's about not quitting.", author: "Andy Frisella" },
+      { text: "Mental toughness is doing the right thing regardless of how you feel.", author: "Andy Frisella" },
+      { text: "Suffer the pain of discipline or suffer the pain of regret.", author: "Jim Rohn" },
+      { text: "You don't have to be extreme, just consistent.", author: "Unknown" },
+      { text: "The hard days are what make you stronger.", author: "Aly Raisman" },
+      { text: "Success is the sum of small efforts repeated day in and day out.", author: "Robert Collier" },
+      { text: "It's not about perfect. It's about effort.", author: "Jillian Michaels" },
+      { text: "You got this, Ericka! 💪", author: "Ollie" }
+    ];
+    
+    function showQuote() {
+      const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+      document.getElementById('quoteText').textContent = '"' + q.text + '"';
+      document.getElementById('quoteAuthor').textContent = '— ' + q.author;
+    }
     const KEY = 'ericka75hard_v4';
     const TASKS = ['diet', 'workout1', 'workout2', 'water', 'reading', 'photo'];
     
@@ -391,25 +418,6 @@
       btn.disabled = !allDone || done;
       btn.classList.toggle('done', done);
       
-      // Weights
-      const wl = document.getElementById('weightList');
-      const weights = (d.weights || []).slice(-10).reverse();
-      if (weights.length) {
-        wl.innerHTML = weights.map((w, i) => {
-          const prev = weights[i + 1];
-          let delta = '';
-          if (prev) {
-            const diff = w.weight - prev.weight;
-            if (diff !== 0) {
-              delta = `<span class="weight-delta ${diff < 0 ? 'down' : 'up'}">${diff > 0 ? '+' : ''}${diff.toFixed(1)}</span>`;
-            }
-          }
-          return `<div class="weight-entry"><span class="weight-date">${new Date(w.date).toLocaleDateString()}</span><span><span class="weight-val">${w.weight} lbs</span>${delta}</span></div>`;
-        }).join('');
-      } else {
-        wl.innerHTML = '<p style="opacity:0.5;text-align:center;padding:20px 0;">No weights logged yet</p>';
-      }
-      
       // Calendar
       const cal = document.getElementById('calendar');
       cal.innerHTML = '';
@@ -439,6 +447,7 @@
       });
     });
     
+    showQuote();
     render();
   </script>
 </body>
