@@ -246,8 +246,8 @@
   </div>
 
   <script>
-    // Day 1 = Feb 24, 2026. Use noon to avoid timezone issues
-    const START = new Date(2026, 1, 24, 12, 0, 0); // Month is 0-indexed, so 1 = February
+    // Day 1 = Feb 23, 2026. Use noon to avoid timezone issues
+    const START = new Date(2026, 1, 23, 12, 0, 0); // Month is 0-indexed, so 1 = February
     const KEY = 'ericka75hard_v4';
     const TASKS = ['diet', 'workout1', 'workout2', 'water', 'reading', 'photo'];
     
@@ -289,20 +289,18 @@
       if (!d.completedDays) d.completedDays = [];
       if (!d.weights) d.weights = [];
       
-      // NUCLEAR FIX: Clear all old data and set correct 9 completed days
-      // Ericka confirmed days 1-9 complete as of Mar 4
-      if (!d.nuclear_fix_v1) {
-        // Generate correct date strings for days 1-9
+      // FIX: Clear all old data and set correct 9 completed days
+      // Start: Feb 23 = Day 1, completed days 1-9 (Feb 23 - Mar 3)
+      if (!d.fix_feb23_v1) {
         const correctDays = [];
         for (let i = 0; i < 9; i++) {
-          const dt = new Date(2026, 1, 24 + i); // Feb 24 + i days
+          const dt = new Date(2026, 1, 23 + i); // Feb 23 + i days
           correctDays.push(dt.toDateString());
         }
-        // Replace completedDays entirely
         d.completedDays = correctDays;
-        d.nuclear_fix_v1 = true;
+        d.fix_feb23_v1 = true;
         save(d);
-        console.log('Nuclear fix applied - days 1-9:', correctDays);
+        console.log('Fixed - days 1-9 complete:', correctDays);
       }
       
       return d;
