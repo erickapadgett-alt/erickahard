@@ -316,18 +316,34 @@
       if (!d.completedDays) d.completedDays = [];
       if (!d.weights) d.weights = [];
       
-      // FIX: Mark days 1-11 as complete (Feb 23 - Mar 5)
-      // Today is Mar 6 = Day 12
-      if (!d.fix_mar6_v1) {
-        const correctDays = [];
-        for (let i = 0; i < 11; i++) {
+      // SMART FIX: Fill in any missing past days (ADDITIVE - never removes days)
+      // If you have a streak going, assume all past days were completed
+      const currentDay = getDay();
+      const yesterday = currentDay - 1;
+      
+      // Only run this fix once per session to avoid re-running
+      if (!window._fixApplied && yesterday > 0) {
+        window._fixApplied = true;
+        let needsSave = false;
+        
+        // For each day from 1 to yesterday, ensure it's in completedDays
+        for (let i = 0; i < yesterday; i++) {
           const dt = new Date(2026, 1, 23 + i); // Feb 23 + i days
-          correctDays.push(dt.toDateString());
+          const dateStr = dt.toDateString();
+          if (!d.completedDays.includes(dateStr)) {
+            d.completedDays.push(dateStr);
+            needsSave = true;
+            console.log('Added missing day:', dateStr);
+          }
         }
-        d.completedDays = correctDays;
-        d.fix_mar6_v1 = true;
-        save(d);
-        console.log('Fixed - days 1-11 complete:', correctDays);
+        
+        // Remove duplicates just in case
+        d.completedDays = [...new Set(d.completedDays)];
+        
+        if (needsSave) {
+          save(d);
+          console.log('Fixed missing days. Total completed:', d.completedDays.length);
+        }
       }
       
       return d;
