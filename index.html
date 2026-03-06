@@ -316,18 +316,18 @@
       if (!d.completedDays) d.completedDays = [];
       if (!d.weights) d.weights = [];
       
-      // FIX: Clear all old data and set correct 9 completed days
-      // Start: Feb 23 = Day 1, completed days 1-9 (Feb 23 - Mar 3)
-      if (!d.fix_feb23_v1) {
+      // FIX: Mark days 1-11 as complete (Feb 23 - Mar 5)
+      // Today is Mar 6 = Day 12
+      if (!d.fix_mar6_v1) {
         const correctDays = [];
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < 11; i++) {
           const dt = new Date(2026, 1, 23 + i); // Feb 23 + i days
           correctDays.push(dt.toDateString());
         }
         d.completedDays = correctDays;
-        d.fix_feb23_v1 = true;
+        d.fix_mar6_v1 = true;
         save(d);
-        console.log('Fixed - days 1-9 complete:', correctDays);
+        console.log('Fixed - days 1-11 complete:', correctDays);
       }
       
       return d;
